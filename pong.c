@@ -137,9 +137,6 @@ void GameStartInit()
 //Read user inputs here (CPU is awaken by ADC12 conversion)
 void UserInputs_update(void)
 {
- R1Dir = STOP;
- R2Dir = STOP;
-
 
  if(!(P2IN & BIT4)) //JUP pressed
  {
@@ -147,7 +144,6 @@ void UserInputs_update(void)
   {
    yR1=yR1-2; //move racket1 2 pixel up
   }
-  R1Dir = UP;
  }
 
  if(!(P2IN & BIT5)) //JDOWN pressed
@@ -156,7 +152,6 @@ void UserInputs_update(void)
   {
    yR1=yR1+2; //move racket1 2 pixel down
   }
-  R1Dir = DOWN;
  }
 
  if(!(P2IN & BIT6)) //SW1 pressed
@@ -165,7 +160,6 @@ void UserInputs_update(void)
    {
     yR2=yR2-2; //move racket 2 pixel down
    }
-   R2Dir = UP;
   }
 
  if(!(P2IN & BIT7)) //SW2 pressed
@@ -174,7 +168,6 @@ void UserInputs_update(void)
    {
     yR2=yR2+2; //move racket 2 pixel down
    }
-   R2Dir = DOWN;
   }
 }
 

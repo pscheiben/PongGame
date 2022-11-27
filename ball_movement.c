@@ -76,98 +76,428 @@ void ball_update(void)
  //calculate new position and bouncing
  switch(ballState)
  {
-  case 0: //"Start" state, init ball position
-          yBall = LCD_ROW >> 1;
-          xBall = LCD_COL >> 1;
-          xBall_old2 = xBall;
-          yBall_old2 = yBall;
-          xBall_old = xBall;
-          yBall_old = yBall;
-          //choose next state to start ball movement
-          ballState = 1;
-          break;
-  case 1: //move Right
-          xBall = xBall + 2;
-          //check right wall bounce
-          if(right_wall_reached())
-              ballState = 8;  //Right wall is here, bounce to direction 8
-          break;
-  case 2: //move Right and a bit Up
-          xBall = xBall + 2;
-          yBall = yBall - 1;
-          //Check top wall bounce
-          if(top_wall_reached())
-              ballState = 14; //Top wall hit, bounce to 14
-          //check right wall bounce
-          else if(right_wall_reached())
-              ballState = 8;  //Right wall is here, bounce to direction 8
-          break;
-  case 3: //move
+ case 0: //"Start" state, init ball position
+         yBall = LCD_ROW >> 1;
+         xBall = LCD_COL >> 1;
+         xBall_old2 = xBall;
+         yBall_old2 = yBall;
+         xBall_old = xBall;
+         yBall_old = yBall;
+         //choose next state to start ball movement
+         ballState = 1;
+         break;
 
-          break;
-  case 4: //move
+ case 1: //move Right
+             xBall = xBall + 2;
+             //check right wall reached
+             if(right_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P2_racket_hit())
+                            {
+                               if(R2Dir == UP) //up effect on ball
+                               { ballState = 9; }
+                               else
+                               {
+                                   if(R2Dir == DOWN) //down effect on ball
+                                    {   ballState = 7; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 8; }
+                               }
+                            }
+                            else //Goal! Player 2 missed the ball
+                             { ballState = 16; }
+              }
 
-          break;
-  case 5: //move
+             break;
 
-          break;
-  case 6: //move
+ case 2: //move Right and a bit Up
+             xBall = xBall + 2;
+             yBall = yBall - 1;
+             //Check top wall bounce
+             if(top_wall_reached())
+                 ballState = 14; //Top wall hit, bounce to 14
+             //check right wall reached
+             else if(right_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P2_racket_hit())
+                            {
+                               if(R2Dir == UP) //up effect on ball
+                               { ballState = 8; }
+                               else
+                               {
+                                   if(R2Dir == DOWN) //down effect on ball
+                                    {   ballState = 6; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 7; }
+                               }
+                            }
+                            else //Goal! Player 2 missed the ball
+                             { ballState = 16; }
+              }
 
-          break;
-  case 7: //move
+             break;
 
-          break;
-  case 8: //move Left
-          xBall = xBall - 2;
-          //check left wall reached
-          if(left_wall_reached())
-          {
-            //If racket is here bounce, otherwise it's a goal
-            if(P1_racket_hit())
-            {
-               if(R1Dir == UP) //up effect on ball
-               { ballState = 2; }
-               else
-               {
-                   if(R1Dir == DOWN) //down effect on ball
-                    {   ballState = 14; }
-                   else //no effect, normal bounce
-                    {   ballState = 1; }
-               }
-            }
-            else //Goal! Player 1 missed the ball
-             { ballState = 16; }
-          }
-          break;
-  case 9: //move
+ case 3: //move Right and Up
+             xBall = xBall + 2;
+             yBall = yBall - 2;
+             //Check top wall bounce
+             if(top_wall_reached())
+                 ballState = 14; //Top wall hit, bounce to 14
+             //check right wall reached
+             else if(right_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P2_racket_hit())
+                            {
+                               if(R2Dir == UP) //up effect on ball
+                               { ballState = 7; }
+                               else
+                               {
+                                   if(R2Dir == DOWN) //down effect on ball
+                                    {   ballState = 5; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 6; }
+                               }
+                            }
+                            else //Goal! Player 2 missed the ball
+                             { ballState = 16; }
+              }
 
-          break;
-  case 10://move
+             break;
 
-          break;
-  case 11://move
+ case 4: //move a bit Right and Up
+             xBall = xBall + 1;
+             yBall = yBall - 2;
+             //Check top wall bounce
+             if(top_wall_reached())
+                 ballState = 12; //Top wall hit, bounce to 14
+             //check right wall reached
+             else if(right_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P2_racket_hit())
+                            {
+                               if(R2Dir == UP) //up effect on ball
+                               { ballState = 6; }
+                               else
+                               {
+                                   if(R2Dir == DOWN) //down effect on ball
+                                    {   ballState = 5; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 5; }
+                               }
+                            }
+                            else //Goal! Player 2 missed the ball
+                             { ballState = 16; }
+              }
 
-          break;
-  case 12://move
+             break;
 
-          break;
-  case 13://move
+ case 5: //move a bit Left and Up
+             xBall = xBall + 1;
+             yBall = yBall - 2;
+             //Check top wall bounce
+             if(top_wall_reached())
+                 ballState = 11; //Top wall hit, bounce to 14
+             //check right wall bounce
+             else if(left_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P1_racket_hit())
+                            {
+                               if(R1Dir == UP) //up effect on ball
+                               { ballState = 2; }
+                               else
+                               {
+                                   if(R1Dir == DOWN) //down effect on ball
+                                    {   ballState = 14; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 1; }
+                               }
+                            }
+                            else //Goal! Player 1 missed the ball
+                             { ballState = 16; }
+               ballState = 4;  //Right wall is here, bounce to direction 4
+             }
 
-          break;
-  case 14://move
+             break;
 
-          break;
-  case 15://Right-hand player missed the ball!
+ case  6: //move left and  UP
+             xBall = xBall - 2;
+             yBall = yBall - 2;
+             //Check up wall bounce
+             if(top_wall_reached())
+                 ballState = 10; //up wall hit, bounce to 10
+             //check left wall reached
+             else if(left_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P1_racket_hit())
+                            {
+                               if(R1Dir == UP) //up effect on ball
+                               { ballState = 2; }
+                               else
+                               {
+                                   if(R1Dir == DOWN) //down effect on ball
+                                    {   ballState = 4; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 3; }
+                               }
+                            }
+                            else //Goal! Player 1 missed the ball
+                             { ballState = 15; }
+              }
 
-          break;
-  case 16://Left-hand player missed the ball!
-          //A very simplistic game end handling
-          halLcdClearScreen(); //CLEAR SCREEN
-          halLcdPrintLine("     GOAL", 4, OVERWRITE_TEXT);//PRINT MESSAGE
-          halLcdPrintLine(" Reset to start", 6, OVERWRITE_TEXT);//PRINT MESSAGE
-          //stop TimerA1. This prevents new LCD and ball updates
-          //but user input is operational because is driven by TimerB0
-          TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
-          break;
- }
+             break;
+
+
+ case  7: //move left and a bit UP
+             xBall = xBall - 2;
+             yBall = yBall - 1;
+             //Check up wall bounce
+             if(top_wall_reached())
+                 ballState = 9; //up wall hit, bounce to 9
+             //check left wall reached
+             else if(left_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P1_racket_hit())
+                            {
+                               if(R1Dir == UP) //up effect on ball
+                               { ballState = 1; }
+                               else
+                               {
+                                   if(R1Dir == DOWN) //down effect on ball
+                                    {   ballState = 3; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 2; }
+                               }
+                            }
+                            else //Goal! Player 1 missed the ball
+                             { ballState = 15; }
+              }
+
+             break;
+
+ case 8: //move Left
+         xBall = xBall - 2;
+         //check left wall reached
+         if(left_wall_reached())
+         {
+           //If racket is here bounce, otherwise it's a goal
+           if(P1_racket_hit())
+           {
+              if(R1Dir == UP) //up effect on ball
+              { ballState = 14; }
+              else
+              {
+                  if(R1Dir == DOWN) //down effect on ball
+                   {   ballState = 2; }
+                  else //no effect, normal bounce
+                   {   ballState = 1; }
+              }
+           }
+           else //Goal! Player 1 missed the ball
+            { ballState = 16; }
+         }
+         break;
+
+ case  9: //move left and a bit Down
+             xBall = xBall - 2;
+             yBall = yBall + 1;
+             //Check bottom wall bounce
+             if(bottom_wall_reached())
+                 ballState = 7; //bottom wall hit, bounce to 5
+             //check left wall reached
+             else if(left_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P1_racket_hit())
+                            {
+                               if(R1Dir == UP) //up effect on ball
+                               { ballState = 13; }
+                               else
+                               {
+                                   if(R1Dir == DOWN) //down effect on ball
+                                    {   ballState = 1; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 14; }
+                               }
+                            }
+                            else //Goal! Player 1 missed the ball
+                             { ballState = 15; }
+              }
+
+             break;
+
+
+ case 10: //move left and Down
+             xBall = xBall - 2;
+             yBall = yBall + 2;
+             //Check bottom wall bounce
+             if(bottom_wall_reached())
+                 ballState = 6; //bottom wall hit, bounce to 5
+             //check left wall reached
+             else if(left_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P1_racket_hit())
+                            {
+                               if(R1Dir == UP) //up effect on ball
+                               { ballState = 12; }
+                               else
+                               {
+                                   if(R1Dir == DOWN) //down effect on ball
+                                    {   ballState = 14; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 13; }
+                               }
+                            }
+                            else //Goal! Player 1 missed the ball
+                             { ballState = 15; }
+              }
+
+             break;
+
+ case 11: //move a bit left and Down
+             xBall = xBall - 1;
+             yBall = yBall + 2;
+             //Check bottom wall bounce
+             if(bottom_wall_reached())
+                 ballState = 5; //bottom wall hit, bounce to 5
+             //check left wall reached
+             else if(left_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P1_racket_hit())
+                            {
+                               if(R1Dir == UP) //up effect on ball
+                               { ballState = 12; }
+                               else
+                               {
+                                   if(R1Dir == DOWN) //down effect on ball
+                                    {   ballState = 13; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 12; }
+                               }
+                            }
+                            else //Goal! Player 1 missed the ball
+                             { ballState = 15; }
+              }
+
+             break;
+
+
+ case 12: //move a bit Right and Down
+             xBall = xBall + 1;
+             yBall = yBall + 2;
+             //Check bottom wall bounce
+             if(bottom_wall_reached())
+                 ballState = 4; //bottom wall hit, bounce to 4
+             //check right wall reached
+             else if(right_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P2_racket_hit())
+                            {
+                               if(R2Dir == UP) //up effect on ball
+                               { ballState = 11; }
+                               else
+                               {
+                                   if(R2Dir == DOWN) //down effect on ball
+                                    {   ballState = 10; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 11; }
+                               }
+                            }
+                            else //Goal! Player 2 missed the ball
+                             { ballState = 16; }
+              }
+
+             break;
+
+ case 13: //move Right and Down
+             xBall = xBall + 2;
+             yBall = yBall + 2;
+             //Check bottom wall bounce
+             if(bottom_wall_reached())
+                 ballState = 3; //bottom wall hit, bounce to 3
+             //check right wall reached
+             else if(right_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P2_racket_hit())
+                            {
+                               if(R2Dir == UP) //up effect on ball
+                               { ballState = 11; }
+                               else
+                               {
+                                   if(R2Dir == DOWN) //down effect on ball
+                                    {   ballState = 9; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 10; }
+                               }
+                            }
+                            else //Goal! Player 2 missed the ball
+                             { ballState = 16; }
+              }
+
+             break;
+
+
+ case 14: //move Right and a bit Down
+             xBall = xBall + 2;
+             yBall = yBall + 1;
+             //Check bottom wall bounce
+             if(bottom_wall_reached())
+                 ballState = 2; //bottom wall hit, bounce to 7
+             //check right wall reached
+             else if(right_wall_reached())
+             {
+                 //If racket is here bounce, otherwise it's a goal
+                            if(P2_racket_hit())
+                            {
+                               if(R2Dir == UP) //up effect on ball
+                               { ballState = 10; }
+                               else
+                               {
+                                   if(R2Dir == DOWN) //down effect on ball
+                                    {   ballState = 8; }
+                                   else //no effect, normal bounce
+                                    {   ballState = 9; }
+                               }
+                            }
+                            else //Goal! Player 2 missed the ball
+                             { ballState = 16; }
+              }
+
+             break;
+
+
+ case 15:  //Right-hand player missed the ball!
+//          //A very simplistic game end handling
+//          halLcdClearScreen(); //CLEAR SCREEN
+//          halLcdPrintLine("     GOAL", 4, OVERWRITE_TEXT);//PRINT MESSAGE
+//          halLcdPrintLine(" Reset to start", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+//          //stop TimerA1. This prevents new LCD and ball updates
+//          //but user input is operational because is driven by TimerB0
+//          TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+         ballState = 0;
+         break;
+ case 16:  //Left-hand player missed the ball!
+
+
+
+//          //A very simplistic game end handling
+//          halLcdClearScreen(); //CLEAR SCREEN
+//          halLcdPrintLine("     GOAL", 4, OVERWRITE_TEXT);//PRINT MESSAGE
+//          halLcdPrintLine(" Reset to start", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+//          //stop TimerA1. This prevents new LCD and ball updates
+//          //but user input is operational because is driven by TimerB0
+//          TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+         ballState = 0;
+         break;
+}
 }

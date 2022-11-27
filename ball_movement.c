@@ -61,6 +61,14 @@ int P1_racket_hit() //check ball vs left racket
      return 0;
 }
 
+int P2_racket_hit() //check ball vs right racket
+{
+ if( (yBall <= (yR2 + HALF_RACKET_SIZE)) && (yBall >= (yR2 - HALF_RACKET_SIZE)) )
+     return 1;
+ else
+     return 0;
+}
+
 //Update the state and position of the ball
 //(CPU is awaken by TimerA1 interval ints)
 void ball_update(void)

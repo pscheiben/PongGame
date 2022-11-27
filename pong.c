@@ -15,6 +15,7 @@
 #include    "hal_lcd.h"
 #include    "general_settings.h"
 #include    "ball_movement.h"
+#include    "informationboard.h"
 
 /* 5xx functions / variables */ 
 void halBoardInit(void);
@@ -117,19 +118,20 @@ void GameStartInit()
 
  //Draw top and bottom walls and information frame
 
- halLcdHLine(0, LCD_COL, LCD_ROW-1, PIXEL_ON); //halLcdHLine is more efficient then halLcdLine
+ halLcdHLine(0, LCD_COL, LCD_ROW-1, PIXEL_ON); //halLcdHLine is more convenient then halLcdLine
  halLcdHLine(0, LCD_COL, INF_BRD_WIDTH, PIXEL_ON);
+ information_board_draw();
 
  //Initial position of racket 1
  xR1 = 0; //left-hand side
- yR1 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row
- xR1_old = xR1;
+ yR1 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
+ xR1_old = xR1;  //trail init is the same as the actual position
  yR1_old = yR1;
 
  //Initial position of racket 2
  xR2 = LCD_COL-2; //right-hand side
- yR2 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row
- xR2_old = xR2;
+ yR2 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
+ xR2_old = xR2; //trail init is the same as the actual position
  yR2_old = yR2;
 
 }

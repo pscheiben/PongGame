@@ -14,7 +14,7 @@
 
 #define HALF_RACKET_SIZE 5 //racket width in pixels
 #define BALL_RADIUS 1 //ball radius in pixels
-#define INF_BRD_WIDTH 12 //information board width
+
 
 //Timing intervals for the game
 #define TIMING_BASE_mS 5 //base timing interval for all timed execution

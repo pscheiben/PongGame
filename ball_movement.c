@@ -12,6 +12,7 @@
 #include "general_settings.h"
 #include "hal_lcd.h"
 #include "msp430f5438a.h"
+#include "informationboard.h"
 
 int top_wall_reached()
 {
@@ -484,6 +485,7 @@ void ball_update(void)
 //          //stop TimerA1. This prevents new LCD and ball updates
 //          //but user input is operational because is driven by TimerB0
 //          TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+         p1_life_counter --;  //decrease the Player 1 lifecount
          ballState = 0;
          break;
  case 16:  //Left-hand player missed the ball!
@@ -497,6 +499,7 @@ void ball_update(void)
 //          //stop TimerA1. This prevents new LCD and ball updates
 //          //but user input is operational because is driven by TimerB0
 //          TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+         p2_life_counter --;  //decrease the Player 1 lifecount
          ballState = 0;
          break;
 }

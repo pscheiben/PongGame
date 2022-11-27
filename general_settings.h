@@ -39,6 +39,9 @@ volatile int xR1, yR1; //Current racket 1 position
 volatile int xR1_old, yR1_old; //To delete old racket position
 volatile enum VDir R1Dir; //last movement direction for racket 1 (used for ball control)
 
-
+//Racket2's variables
+volatile int xR2, yR2; //Current racket 2 position
+volatile int xR2_old, yR2_old; //To delete old racket position
+volatile enum VDir R2Dir; //last movement direction for racket 2 (used for ball control)
 
 #endif /* GENERAL_SETTINGS_H_ */

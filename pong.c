@@ -8,7 +8,7 @@
 //  M. MATA
 //  GCU
 //  November 2017
-//******************************************************************************	
+//******************************************************************************
 #include    "msp430f5438a.h"
 #include	"hal_UCS.h"
 #include 	"hal_PMM.h"
@@ -93,7 +93,7 @@ void main(void)
      LCD_update();
     }
 
-  }   	  
+  }
 }
 
 //LCD initialization
@@ -138,16 +138,44 @@ void GameStartInit()
 void UserInputs_update(void)
 {
  R1Dir = STOP;
- //EXAMPLE: read button SW1
- if(!(P2IN & BIT6)) //SW1 pressed
+ R2Dir = STOP;
+
+
+ if(!(P2IN & BIT4)) //JUP pressed
  {
   if (yR1 > HALF_RACKET_SIZE) //avoid overwriting top wall
   {
-   yR1--; //move racket 1 pixel up
+   yR1=yR1-2; //move racket1 1 pixel up
   }
   R1Dir = UP;
  }
 
+ if(!(P2IN & BIT5)) //JDOWN pressed
+ {
+  if (yR1 < LCD_ROW-1-HALF_RACKET_SIZE) //avoid overwriting Bottom wall
+  {
+   yR1=yR1+2; //move racket1 1 pixel down
+  }
+  R1Dir = DOWN;
+ }
+
+ if(!(P2IN & BIT6)) //SW1 pressed
+  {
+   if (yR2 > HALF_RACKET_SIZE) //avoid overwriting top wall
+   {
+    yR2=yR2-2; //move racket 1 pixel down
+   }
+   R2Dir = UP;
+  }
+
+ if(!(P2IN & BIT7)) //SW2 pressed
+  {
+   if (yR2 < LCD_ROW-1-HALF_RACKET_SIZE) //avoid overwriting Bottom wall
+   {
+    yR2=yR2+2; //move racket 1 pixel down
+   }
+   R2Dir = DOWN;
+  }
 }
 
 //Update drawings in LCD screen (CPU is awaken by TimerA1 interval ints)

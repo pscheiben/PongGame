@@ -219,7 +219,7 @@ void ball_update(void)
                                }
                             }
                             else //Goal! Player 1 missed the ball
-                             { ballState = 16; }
+                             { ballState = 15; }
                ballState = 4;  //Right wall is here, bounce to direction 4
              }
 
@@ -301,7 +301,7 @@ void ball_update(void)
               }
            }
            else //Goal! Player 1 missed the ball
-            { ballState = 16; }
+            { ballState = 15; }
          }
          break;
 
@@ -444,7 +444,6 @@ void ball_update(void)
                             else //Goal! Player 2 missed the ball
                              { ballState = 16; }
               }
-
              break;
 
 
@@ -477,30 +476,43 @@ void ball_update(void)
              break;
 
 
- case 15:  //Right-hand player missed the ball!
-//          //A very simplistic game end handling
-//          halLcdClearScreen(); //CLEAR SCREEN
-//          halLcdPrintLine("     GOAL", 4, OVERWRITE_TEXT);//PRINT MESSAGE
-//          halLcdPrintLine(" Reset to start", 6, OVERWRITE_TEXT);//PRINT MESSAGE
-//          //stop TimerA1. This prevents new LCD and ball updates
-//          //but user input is operational because is driven by TimerB0
-//          TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
-         p1_life_counter --;  //decrease the Player 1 lifecount
-         ballState = 0;
+ case 15:  //Left-hand player missed the ball!
+         p1_life_counter --;
+         check_player1_score(p1_life_counter); //reduce the lives on the information board
+         if(p1_life_counter>0)
+         {
+             ballState = 0;
+         }
+         else
+         {
+                       //A very simplistic game end handling
+                       halLcdClearScreen(); //CLEAR SCREEN
+                       halLcdPrintLine("     Game Over", 4, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine(" Reset to start", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+                       //stop TimerA1. This prevents new LCD and ball updates
+                       //but user input is operational because is driven by TimerB0
+                       TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+         }
          break;
- case 16:  //Left-hand player missed the ball!
 
+ case 16:  //Right-hand player missed the ball!
 
-
-//          //A very simplistic game end handling
-//          halLcdClearScreen(); //CLEAR SCREEN
-//          halLcdPrintLine("     GOAL", 4, OVERWRITE_TEXT);//PRINT MESSAGE
-//          halLcdPrintLine(" Reset to start", 6, OVERWRITE_TEXT);//PRINT MESSAGE
-//          //stop TimerA1. This prevents new LCD and ball updates
-//          //but user input is operational because is driven by TimerB0
-//          TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
-         p2_life_counter --;  //decrease the Player 1 lifecount
-         ballState = 0;
+         p2_life_counter --;  //decrease the Player 2 lifecount
+         check_player2_score(p2_life_counter); //reduce the lives on the information board
+         if(p2_life_counter>0)
+         {
+             ballState = 0;
+         }
+         else
+         {
+                       //A very simplistic game end handling
+                       halLcdClearScreen(); //CLEAR SCREEN
+                       halLcdPrintLine("     Game Over", 4, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine(" Reset to start", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+                       //stop TimerA1. This prevents new LCD and ball updates
+                       //but user input is operational because is driven by TimerB0
+                       TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+         }
          break;
 }
 }

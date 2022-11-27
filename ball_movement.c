@@ -23,6 +23,16 @@ int top_wall_reached()
     else return 0;
 }
 
+int bottom_wall_reached()
+{
+    if(yBall >= LCD_ROW-1-BALL_RADIUS) //bottom wall reached
+    {
+        yBall = LCD_ROW-2-BALL_RADIUS; //do not overwrite the wall
+        return 1;
+    }
+    else return 0; //bottom wall not reached
+}
+
 int right_wall_reached()
 {
     if(xBall >= LCD_COL-1-BALL_RADIUS) //right wall reached

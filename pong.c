@@ -236,6 +236,12 @@ void halBoardInit(void)
   P2DIR &= ~BIT6; //pin 6 input
   P2REN = P2REN | BIT6; //pin 6 internal pull R enabled
   P2OUT = P2OUT | BIT6; //pin 6 pull-down
+
+  //Now configure joystick UP/Down Left/Right Middle (P2.4+P2.5)(P2.1+P2.2)(P2.3) as input with pull-down (example)
+  P2DIR &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //pin 6+7 input
+  P2REN = P2REN | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 6+7 internal pull R enabled
+  P2OUT = P2OUT | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 6+7 pull-down
+
 }
 
 //Inits ADC12 to read battery voltage triggered from TB0.OUT3

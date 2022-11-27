@@ -145,7 +145,7 @@ void UserInputs_update(void)
  {
   if (yR1 > HALF_RACKET_SIZE) //avoid overwriting top wall
   {
-   yR1=yR1-2; //move racket1 1 pixel up
+   yR1=yR1-2; //move racket1 2 pixel up
   }
   R1Dir = UP;
  }
@@ -154,7 +154,7 @@ void UserInputs_update(void)
  {
   if (yR1 < LCD_ROW-1-HALF_RACKET_SIZE) //avoid overwriting Bottom wall
   {
-   yR1=yR1+2; //move racket1 1 pixel down
+   yR1=yR1+2; //move racket1 2 pixel down
   }
   R1Dir = DOWN;
  }
@@ -163,7 +163,7 @@ void UserInputs_update(void)
   {
    if (yR2 > HALF_RACKET_SIZE) //avoid overwriting top wall
    {
-    yR2=yR2-2; //move racket 1 pixel down
+    yR2=yR2-2; //move racket 2 pixel down
    }
    R2Dir = UP;
   }
@@ -172,7 +172,7 @@ void UserInputs_update(void)
   {
    if (yR2 < LCD_ROW-1-HALF_RACKET_SIZE) //avoid overwriting Bottom wall
    {
-    yR2=yR2+2; //move racket 1 pixel down
+    yR2=yR2+2; //move racket 2 pixel down
    }
    R2Dir = DOWN;
   }
@@ -260,15 +260,15 @@ void halBoardInit(void)
   P5OUT &= ~0x80;
   P5REN |= 0x80;
 
-  //Now configure SW1 (P2.6) as input with pull-down (example)
-  P2DIR &= ~BIT6; //pin 6 input
-  P2REN = P2REN | BIT6; //pin 6 internal pull R enabled
-  P2OUT = P2OUT | BIT6; //pin 6 pull-down
+  //Now configure SW1+SW2 (P2.6+P2.7) as input with pull-down (example)
+  P2DIR &= ~(BIT6+BIT7); //pin 6+7 input
+  P2REN = P2REN | (BIT6+BIT7); //pin 6+7 internal pull R enabled
+  P2OUT = P2OUT | (BIT6+BIT7); //pin 6+7 pull-down
 
   //Now configure joystick UP/Down Left/Right Middle (P2.4+P2.5)(P2.1+P2.2)(P2.3) as input with pull-down (example)
-  P2DIR &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //pin 6+7 input
-  P2REN = P2REN | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 6+7 internal pull R enabled
-  P2OUT = P2OUT | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 6+7 pull-down
+  P2DIR &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 input
+  P2REN = P2REN | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 internal pull R enabled
+  P2OUT = P2OUT | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 pull-down
 
 }
 

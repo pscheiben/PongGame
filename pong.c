@@ -115,9 +115,9 @@ void GameStartInit()
  LCDUpdatePending = 0;
  ballState = 0; //initial ball state
 
- //Draw top, right and bottom walls
+ //Draw top and bottom walls
  halLcdLine(0,0, LCD_COL-1,0, PIXEL_ON);
- halLcdLine(LCD_COL-1,0, LCD_COL-1,LCD_ROW-1, PIXEL_ON);
+ //halLcdLine(LCD_COL-1,0, LCD_COL-1,LCD_ROW-1, PIXEL_ON); //right wall is commented out
  halLcdLine(0,LCD_ROW-1, LCD_COL-1,LCD_ROW-1, PIXEL_ON);
 
  //Initial position of racket 1
@@ -125,6 +125,12 @@ void GameStartInit()
  yR1 = LCD_ROW >> 1; //middle row
  xR1_old = xR1;
  yR1_old = yR1;
+
+ //Initial position of racket 2
+ xR2 = LCD_COL-2; //right-hand side
+ yR2 = LCD_ROW >> 1; //middle row
+ xR2_old = xR2;
+ yR2_old = yR2;
 
 }
 

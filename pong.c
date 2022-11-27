@@ -115,20 +115,20 @@ void GameStartInit()
  LCDUpdatePending = 0;
  ballState = 0; //initial ball state
 
- //Draw top and bottom walls
- halLcdLine(0,0, LCD_COL-1,0, PIXEL_ON);
- //halLcdLine(LCD_COL-1,0, LCD_COL-1,LCD_ROW-1, PIXEL_ON); //right wall is commented out
- halLcdLine(0,LCD_ROW-1, LCD_COL-1,LCD_ROW-1, PIXEL_ON);
+ //Draw top and bottom walls and information frame
+
+ halLcdHLine(0, LCD_COL, LCD_ROW-1, PIXEL_ON); //halLcdHLine is more efficient then halLcdLine
+ halLcdHLine(0, LCD_COL, INF_BRD_WIDTH, PIXEL_ON);
 
  //Initial position of racket 1
  xR1 = 0; //left-hand side
- yR1 = LCD_ROW >> 1; //middle row
+ yR1 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row
  xR1_old = xR1;
  yR1_old = yR1;
 
  //Initial position of racket 2
  xR2 = LCD_COL-2; //right-hand side
- yR2 = LCD_ROW >> 1; //middle row
+ yR2 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row
  xR2_old = xR2;
  yR2_old = yR2;
 
@@ -143,7 +143,7 @@ void UserInputs_update(void)
 
  if(!(P2IN & BIT4)) //JUP pressed
  {
-  if (yR1 > HALF_RACKET_SIZE) //avoid overwriting top wall
+  if (yR1 > HALF_RACKET_SIZE + INF_BRD_WIDTH) //avoid overwriting top wall
   {
    yR1=yR1-2; //move racket1 2 pixel up
   }
@@ -161,7 +161,7 @@ void UserInputs_update(void)
 
  if(!(P2IN & BIT6)) //SW1 pressed
   {
-   if (yR2 > HALF_RACKET_SIZE) //avoid overwriting top wall
+   if (yR2 > HALF_RACKET_SIZE + INF_BRD_WIDTH) //avoid overwriting top wall
    {
     yR2=yR2-2; //move racket 2 pixel down
    }

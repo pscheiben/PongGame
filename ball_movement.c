@@ -15,9 +15,9 @@
 
 int top_wall_reached()
 {
-    if(yBall <= BALL_RADIUS) //up wall rached
+    if(yBall <= BALL_RADIUS + INF_BRD_WIDTH) //up wall reached
     {
-        yBall = 1+BALL_RADIUS; //do not overwrite the wall
+        yBall = 1 + BALL_RADIUS + INF_BRD_WIDTH; //do not overwrite the wall
         return 1;
     }
     else return 0;
@@ -77,7 +77,7 @@ void ball_update(void)
  switch(ballState)
  {
  case 0: //"Start" state, init ball position
-         yBall = LCD_ROW >> 1;
+         yBall = (LCD_ROW + INF_BRD_WIDTH) >> 1;
          xBall = LCD_COL >> 1;
          xBall_old2 = xBall;
          yBall_old2 = yBall;

@@ -48,7 +48,8 @@ int left_wall_reached()
 {
     if(xBall <= BALL_RADIUS)  //left wall reached
     {
-        xBall = 1+BALL_RADIUS; //do not overwrite wall/racket1
+
+        xBall = 1 + BALL_RADIUS; //do not overwrite wall/racket1
         return 1;
     }
     else return 0; //right wall not reached
@@ -77,7 +78,18 @@ void ball_update(void)
  //calculate new position and bouncing
  switch(ballState)
  {
- case 0: //"Start" state, init ball position
+ case 0:
+         //Clear the previous scored ball
+         halLcdCircle(xBall_old2, yBall_old2, BALL_RADIUS, PIXEL_OFF);
+         halLcdPixel(xBall_old2, yBall_old2, PIXEL_OFF);
+         halLcdCircle(xBall_old, yBall_old, BALL_RADIUS, PIXEL_OFF);
+         halLcdPixel(xBall_old, yBall_old, PIXEL_OFF);
+         halLcdCircle(xBall, yBall, BALL_RADIUS, PIXEL_OFF);
+         halLcdPixel(xBall, yBall, PIXEL_OFF);
+
+
+
+         //"Start" state, init ball position
          yBall = (LCD_ROW + INF_BRD_WIDTH) >> 1;
          xBall = LCD_COL >> 1;
          xBall_old2 = xBall;
@@ -283,7 +295,10 @@ void ball_update(void)
              break;
 
  case 8: //move Left
-         xBall = xBall - 2;
+         if(xBall>=2)
+         {
+             xBall = xBall - 2;
+         }
          //check left wall reached
          if(left_wall_reached())
          {
@@ -477,11 +492,14 @@ void ball_update(void)
 
 
  case 15:  //Left-hand player missed the ball!
+
          p1_life_counter --;
          check_player1_score(p1_life_counter); //reduce the lives on the information board
          if(p1_life_counter>0)
          {
+
              ballState = 0;
+
          }
          else
          {
@@ -501,7 +519,7 @@ void ball_update(void)
          check_player2_score(p2_life_counter); //reduce the lives on the information board
          if(p2_life_counter>0)
          {
-             ballState = 0;
+              ballState = 0;
          }
          else
          {

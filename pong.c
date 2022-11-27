@@ -163,6 +163,17 @@ void LCD_update(void)
  yR1_old = yR1;
  xR1_old = xR1;
 
+ //update older positions to clear old racket2 and draw new one
+ //clear old racket2
+ halLcdVLine(xR2_old, yR2_old - HALF_RACKET_SIZE, yR2_old + HALF_RACKET_SIZE, PIXEL_OFF);
+ halLcdVLine(xR2_old + 1, yR2_old - HALF_RACKET_SIZE, yR2_old + HALF_RACKET_SIZE, PIXEL_OFF);
+ //Draw new racket2
+ halLcdVLine(xR2, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON);
+ halLcdVLine(xR2 + 1, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON);
+ yR2_old = yR2;
+ xR2_old = xR2;
+
+
  //Clear oldest ball
  halLcdCircle(xBall_old2, yBall_old2, BALL_RADIUS, PIXEL_OFF);
  halLcdPixel(xBall_old2, yBall_old2, PIXEL_OFF);

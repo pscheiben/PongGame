@@ -10,26 +10,38 @@ CMD_SRCS += \
 
 C_SRCS += \
 ../ball_movement.c \
+../gamemenu.c \
+../informationboard.c \
 ../pong.c 
 
 C_DEPS += \
 ./ball_movement.d \
+./gamemenu.d \
+./informationboard.d \
 ./pong.d 
 
 OBJS += \
 ./ball_movement.obj \
+./gamemenu.obj \
+./informationboard.obj \
 ./pong.obj 
 
 OBJS__QUOTED += \
 "ball_movement.obj" \
+"gamemenu.obj" \
+"informationboard.obj" \
 "pong.obj" 
 
 C_DEPS__QUOTED += \
 "ball_movement.d" \
+"gamemenu.d" \
+"informationboard.d" \
 "pong.d" 
 
 C_SRCS__QUOTED += \
 "../ball_movement.c" \
+"../gamemenu.c" \
+"../informationboard.c" \
 "../pong.c" 
 
 

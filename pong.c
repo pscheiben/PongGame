@@ -121,6 +121,13 @@ void GameStartInit()
  InputChangePending = 0;
  BallUpdatePending = 0;
  LCDUpdatePending = 0;
+ // ball init to avoid the left top corner visual artifact
+ yBall = (LCD_ROW + INF_BRD_WIDTH) >> 1;
+ xBall = LCD_COL >> 1;
+ xBall_old2 = xBall;
+ yBall_old2 = yBall;
+ xBall_old = xBall;
+ yBall_old = yBall;
  ballState = 0; //initial ball state
 
  //Draw top and bottom walls and information frame

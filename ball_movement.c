@@ -51,7 +51,7 @@ int left_wall_reached()
         xBall = 1+BALL_RADIUS; //do not overwrite wall/racket1
         return 1;
     }
-    else return 0; //right wall not reached
+    else return 0;
 }
 
 int P1_racket_hit() //check ball vs left racket

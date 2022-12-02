@@ -30,6 +30,8 @@ volatile int active_menu_id;
 volatile unsigned int InputUpdatePending;
 volatile unsigned int BallUpdatePending;
 volatile unsigned int LCDUpdatePending;
+volatile unsigned int InputChangePending;
+
 
 //Ball handling
 volatile unsigned int ballState; //Current ball state

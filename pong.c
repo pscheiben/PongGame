@@ -29,6 +29,7 @@ void GameStartInit(void);
 void UserInputs_update(void);
 void LCD_update(void);
 
+
 volatile unsigned int LCD_intervals = 0; //count number of base intervals elapsed
 volatile unsigned int Ball_intervals = 0; //count number of base intervals elapsed
 //volatile =  compiler will not optimize these variables
@@ -40,7 +41,7 @@ char LCD_string[5]="x.xV\0"; //test only
 
 //main function
 void main(void)
-{  
+{
   volatile unsigned long  batt_voltage; 
   
   WDTCTL = WDTPW+WDTHOLD; // Stop WDT
@@ -117,6 +118,7 @@ void LCDInit(void)
 void GameStartInit()
 {
  InputUpdatePending = 0;
+ InputChangePending = 0;
  BallUpdatePending = 0;
  LCDUpdatePending = 0;
  ballState = 0; //initial ball state
@@ -131,12 +133,15 @@ void GameStartInit()
  xR1 = 0; //left-hand side
  yR1 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
  yR1_old = yR1; //trail init is the same as the actual position
+ halLcdVLine(xR1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);    //Drawing the 1st racket at init
+ halLcdVLine(xR1 + 1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);
 
  //Initial position of racket 2
  xR2 = LCD_COL-2; //right-hand side
  yR2 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
  yR2_old = yR2;//trail init is the same as the actual position
-
+ halLcdVLine(xR2, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON); //Drawing the 2nd racket at the init
+ halLcdVLine(xR2 + 1, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON);
 }
 
 //Read user inputs here (CPU is awaken by ADC12 conversion)
@@ -145,9 +150,10 @@ void UserInputs_update(void)
 
  if(!(P2IN & BIT4)) //JUP pressed
  {
-  if (yR1 > HALF_RACKET_SIZE + INF_BRD_WIDTH) //avoid overwriting top wall
+  if (yR1 > HALF_RACKET_SIZE + INF_BRD_WIDTH + 1) //avoid overwriting top wall
   {
    yR1=yR1-2; //move racket1 2 pixel up
+   InputChangePending = 1;
   }
  }
 
@@ -156,14 +162,16 @@ void UserInputs_update(void)
   if (yR1 < LCD_ROW-1-HALF_RACKET_SIZE) //avoid overwriting Bottom wall
   {
    yR1=yR1+2; //move racket1 2 pixel down
+   InputChangePending = 1;
   }
  }
 
  if(!(P2IN & BIT6)) //SW1 pressed
   {
-   if (yR2 > HALF_RACKET_SIZE + INF_BRD_WIDTH) //avoid overwriting top wall
+   if (yR2 > HALF_RACKET_SIZE + INF_BRD_WIDTH + 1) //avoid overwriting top wall
    {
     yR2=yR2-2; //move racket 2 pixel down
+    InputChangePending = 1;
    }
   }
 
@@ -172,6 +180,7 @@ void UserInputs_update(void)
    if (yR2 < LCD_ROW-1-HALF_RACKET_SIZE) //avoid overwriting Bottom wall
    {
     yR2=yR2+2; //move racket 2 pixel down
+    InputChangePending = 1;
    }
   }
 }
@@ -179,26 +188,6 @@ void UserInputs_update(void)
 //Update drawings in LCD screen (CPU is awaken by TimerA1 interval ints)
 void LCD_update(void)
 {
- //update older positions to clear old racket and draw new one
- //clear old racket1
- halLcdVLine(xR1, yR1_old - HALF_RACKET_SIZE, yR1_old + HALF_RACKET_SIZE, PIXEL_OFF);
- halLcdVLine(xR1 + 1, yR1_old - HALF_RACKET_SIZE, yR1_old + HALF_RACKET_SIZE, PIXEL_OFF);
- //Draw new racket1
- halLcdVLine(xR1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);
- halLcdVLine(xR1 + 1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);
- yR1_old = yR1;
-
-
- //update older positions to clear old racket2 and draw new one
- //clear old racket2
- halLcdVLine(xR2, yR2_old - HALF_RACKET_SIZE, yR2_old + HALF_RACKET_SIZE, PIXEL_OFF);
- halLcdVLine(xR2 + 1, yR2_old - HALF_RACKET_SIZE, yR2_old + HALF_RACKET_SIZE, PIXEL_OFF);
- //Draw new racket2
- halLcdVLine(xR2, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON);
- halLcdVLine(xR2 + 1, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON);
- yR2_old = yR2;
-
-
 
  //Clear oldest ball
  halLcdCircle(xBall_old2, yBall_old2, BALL_RADIUS, PIXEL_OFF);
@@ -215,7 +204,32 @@ void LCD_update(void)
  xBall_old=xBall;
  yBall_old=yBall;
 
+ if((InputChangePending==1) || (ballState == 0))
+ {
+         //update older positions to clear old racket and draw new one
+         //clear old racket1
+         halLcdVLine(xR1, (yR1_old - HALF_RACKET_SIZE), (yR1_old + HALF_RACKET_SIZE), PIXEL_OFF);
+         halLcdVLine((xR1 + 1), (yR1_old - HALF_RACKET_SIZE), (yR1_old + HALF_RACKET_SIZE), PIXEL_OFF);
+         //Draw new racket1
+         halLcdVLine(xR1, (yR1 - HALF_RACKET_SIZE), (yR1 + HALF_RACKET_SIZE), PIXEL_ON);
+         halLcdVLine((xR1 + 1), (yR1 - HALF_RACKET_SIZE), (yR1 + HALF_RACKET_SIZE), PIXEL_ON);
+         yR1_old = yR1;
+
+
+      //update older positions to clear old racket2 and draw new one
+         //clear old racket2
+         halLcdVLine(xR2, (yR2_old - HALF_RACKET_SIZE), (yR2_old + HALF_RACKET_SIZE), PIXEL_OFF);
+         halLcdVLine((xR2 + 1), (yR2_old - HALF_RACKET_SIZE), (yR2_old + HALF_RACKET_SIZE), PIXEL_OFF);
+         //Draw new racket2
+         halLcdVLine(xR2, (yR2 - HALF_RACKET_SIZE), (yR2 + HALF_RACKET_SIZE), PIXEL_ON);
+         halLcdVLine((xR2 + 1), (yR2 - HALF_RACKET_SIZE),( yR2 + HALF_RACKET_SIZE), PIXEL_ON);
+         yR2_old = yR2;
+ }
+ InputChangePending==0;
 }
+
+
+
 
 // create string with voltage measurement
 void format_voltage_string(unsigned int voltage)
@@ -262,11 +276,17 @@ void halBoardInit(void)
   P2DIR &= ~(BIT6+BIT7); //pin 6+7 input
   P2REN = P2REN | (BIT6+BIT7); //pin 6+7 internal pull R enabled
   P2OUT = P2OUT | (BIT6+BIT7); //pin 6+7 pull-down
+//  P2IES |= (BIT6+BIT7); //switches interrupt edge is high to low
+//  P2IFG &= ~(BIT6+BIT7); //clear interrupt flags for the switches
+//  P2IE |= (BIT6+BIT7); //Interrupt enable for the switches
 
   //Now configure joystick UP/Down Left/Right Middle (P2.4+P2.5)(P2.1+P2.2)(P2.3) as input with pull-down (example)
   P2DIR &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 input
   P2REN = P2REN | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 internal pull R enabled
   P2OUT = P2OUT | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 pull-down
+//  P2IES |= (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 interrupt edge is high to low
+//  P2IFG &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //clear interrupt flags for the joystick
+//  P2IE |= (BIT4+BIT5+BIT1+BIT2+BIT3); //Interrupt enable for the joystick
 
 }
 
@@ -345,6 +365,8 @@ __interrupt void TIMER1_A0_ISR(void)
  }
 }
 
+
+
 // Timer B0 overflow and CCRx (x>0) interrupt service routine
 #pragma vector=TIMER0_B1_VECTOR
 __interrupt void TIMER0_B1_ISR(void)
@@ -379,7 +401,7 @@ __interrupt void ADC12ISR (void)
       ADC12CTL0 &= ~ADC12ENC;  // Disable conversions to disable VREF
       REFCTL0 &= ~REFON;       // Disable internal reference
       temp_vcc = ADC12MEM0;    //Get Vcc digitalisation
-      InputUpdatePending = 1; //warn the CPU that input update is required
+      InputUpdatePending = 1;  //warn the CPU that input update is required
       //Keep CPU active on exit to process user inputs in main loop
       __bic_SR_register_on_exit(LPM3_bits);
       break;
@@ -400,3 +422,13 @@ __interrupt void ADC12ISR (void)
   case 34: break;                  // Vector 34:  ADC12IFG14
   }
 }
+
+////Port 2 Interrupt service Routine
+//#pragma vector=PORT2_VECTOR //attaches the functions input_ISR to P2 interrupts
+//__interrupt void input_ISR(void)
+//{
+//
+//    P2IFG &= ~(BIT6+BIT7); //clear interrupt flags for the switches
+//    P2IFG &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //clear interrupt flags for the joystick
+//    InputUpdatePending = 1;  //warn the CPU that input update is required
+//}

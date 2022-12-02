@@ -28,7 +28,7 @@ void GameMenuInit(void)
     active_menu_id = 0;
     ActiveMenuDraw(active_menu_id);
 
-    while(P2IN&BIT6) //until SW1 Select is not pressed (pull up)
+    while(P2IN&BIT6) //until SW1 Select is not pressed (pull up) constant pulling
      {
        if((P2IN&BIT7) == 0)
        {

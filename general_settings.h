@@ -21,6 +21,10 @@
 #define LCD_INTERVAL_mS 40 //timing interval for updating LCD
 #define INPUT_INTERVAL_mS 100 //timing interval for reading inputs
 #define BALL_INTERVAL_mS 50 //timing interval for updating ball position
+
+//Tracking the menu and the settings for the game
+volatile int active_menu_id;
+
 //flags marking when updates must be done
 volatile unsigned int InputUpdatePending;
 volatile unsigned int BallUpdatePending;

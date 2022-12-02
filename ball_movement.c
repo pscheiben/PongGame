@@ -487,11 +487,13 @@ void ball_update(void)
          {
                        //A very simplistic game end handling
                        halLcdClearScreen(); //CLEAR SCREEN
-                       halLcdPrintLine("     Game Over", 4, OVERWRITE_TEXT);//PRINT MESSAGE
-                       halLcdPrintLine(" Reset to start", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("     Game Over", 2, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine(" Middle Joystick", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("  to restart ", 7, OVERWRITE_TEXT);//PRINT MESSAGE
                        //stop TimerA1. This prevents new LCD and ball updates
                        //but user input is operational because is driven by TimerB0
                        TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+                       ballState = 17;
          }
          break;
 
@@ -507,12 +509,19 @@ void ball_update(void)
          {
                        //A very simplistic game end handling
                        halLcdClearScreen(); //CLEAR SCREEN
-                       halLcdPrintLine("     Game Over", 4, OVERWRITE_TEXT);//PRINT MESSAGE
-                       halLcdPrintLine(" Reset to start", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("    Game Over", 2, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine(" Middle Joystick", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("   to restart ", 7, OVERWRITE_TEXT);//PRINT MESSAGE
                        //stop TimerA1. This prevents new LCD and ball updates
                        //but user input is operational because is driven by TimerB0
                        TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+                       ballState = 17;
+
          }
+         break;
+ case 17:  //Right-hand player missed the ball!
+
+         WDTCTL=1;
          break;
 }
 }

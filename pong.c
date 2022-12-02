@@ -16,6 +16,8 @@
 #include    "general_settings.h"
 #include    "ball_movement.h"
 #include    "informationboard.h"
+#include    "gamemenu.h"
+
 
 /* 5xx functions / variables */ 
 void halBoardInit(void);
@@ -61,7 +63,10 @@ void main(void)
 
   //Initialize LCD and backlight
   LCDInit();
-
+  //Initialize Menu elemets
+  GameMenuInit();
+  //Clear the Menu
+  //GameMenuClearScr;
   //Initialize game variables
   GameStartInit();
 

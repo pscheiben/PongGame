@@ -96,11 +96,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P2_racket_hit())
                             {
-                               if(R2Dir == UP) //up effect on ball
+                               if(yBall < yR2) //up effect on ball
                                { ballState = 9; }
                                else
                                {
-                                   if(R2Dir == DOWN) //down effect on ball
+                                   if(yBall > yR2) //down effect on ball
                                     {   ballState = 7; }
                                    else //no effect, normal bounce
                                     {   ballState = 8; }
@@ -124,11 +124,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P2_racket_hit())
                             {
-                               if(R2Dir == UP) //up effect on ball
+                               if(yBall < yR2) //up effect on ball
                                { ballState = 8; }
                                else
                                {
-                                   if(R2Dir == DOWN) //down effect on ball
+                                   if(yBall > yR2) //down effect on ball
                                     {   ballState = 6; }
                                    else //no effect, normal bounce
                                     {   ballState = 7; }
@@ -152,11 +152,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P2_racket_hit())
                             {
-                               if(R2Dir == UP) //up effect on ball
+                               if(yBall < yR2) //up effect on ball
                                { ballState = 7; }
                                else
                                {
-                                   if(R2Dir == DOWN) //down effect on ball
+                                   if(yBall > yR2) //down effect on ball
                                     {   ballState = 5; }
                                    else //no effect, normal bounce
                                     {   ballState = 6; }
@@ -180,11 +180,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P2_racket_hit())
                             {
-                               if(R2Dir == UP) //up effect on ball
+                               if(yBall < yR2) //up effect on ball
                                { ballState = 6; }
                                else
                                {
-                                   if(R2Dir == DOWN) //down effect on ball
+                                   if(yBall > yR2) //down effect on ball
                                     {   ballState = 5; }
                                    else //no effect, normal bounce
                                     {   ballState = 5; }
@@ -197,7 +197,7 @@ void ball_update(void)
              break;
 
  case 5: //move a bit Left and Up
-             xBall = xBall + 1;
+             xBall = xBall - 1;
              yBall = yBall - 2;
              //Check top wall bounce
              if(top_wall_reached())
@@ -208,11 +208,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P1_racket_hit())
                             {
-                               if(R1Dir == UP) //up effect on ball
+                               if(yBall < yR1) //up effect on ball
                                { ballState = 2; }
                                else
                                {
-                                   if(R1Dir == DOWN) //down effect on ball
+                                   if(yBall > yR1) //down effect on ball
                                     {   ballState = 14; }
                                    else //no effect, normal bounce
                                     {   ballState = 1; }
@@ -237,11 +237,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P1_racket_hit())
                             {
-                               if(R1Dir == UP) //up effect on ball
+                               if(yBall < yR1) //up effect on ball
                                { ballState = 2; }
                                else
                                {
-                                   if(R1Dir == DOWN) //down effect on ball
+                                   if(yBall > yR1) //down effect on ball
                                     {   ballState = 4; }
                                    else //no effect, normal bounce
                                     {   ballState = 3; }
@@ -266,11 +266,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P1_racket_hit())
                             {
-                               if(R1Dir == UP) //up effect on ball
+                               if(yBall < yR1) //up effect on ball
                                { ballState = 1; }
                                else
                                {
-                                   if(R1Dir == DOWN) //down effect on ball
+                                   if(yBall > yR1) //down effect on ball
                                     {   ballState = 3; }
                                    else //no effect, normal bounce
                                     {   ballState = 2; }
@@ -290,11 +290,11 @@ void ball_update(void)
            //If racket is here bounce, otherwise it's a goal
            if(P1_racket_hit())
            {
-              if(R1Dir == UP) //up effect on ball
+              if(yBall < yR1) //up effect on ball
               { ballState = 14; }
               else
               {
-                  if(R1Dir == DOWN) //down effect on ball
+                  if(yBall > yR1) //down effect on ball
                    {   ballState = 2; }
                   else //no effect, normal bounce
                    {   ballState = 1; }
@@ -310,18 +310,18 @@ void ball_update(void)
              yBall = yBall + 1;
              //Check bottom wall bounce
              if(bottom_wall_reached())
-                 ballState = 7; //bottom wall hit, bounce to 5
+                 ballState = 7; //bottom wall hit, bounce to 7
              //check left wall reached
              else if(left_wall_reached())
              {
                  //If racket is here bounce, otherwise it's a goal
                             if(P1_racket_hit())
                             {
-                               if(R1Dir == UP) //up effect on ball
+                               if(yBall < yR1) //up effect on ball
                                { ballState = 13; }
                                else
                                {
-                                   if(R1Dir == DOWN) //down effect on ball
+                                   if(yBall > yR1) //down effect on ball
                                     {   ballState = 1; }
                                    else //no effect, normal bounce
                                     {   ballState = 14; }
@@ -339,18 +339,18 @@ void ball_update(void)
              yBall = yBall + 2;
              //Check bottom wall bounce
              if(bottom_wall_reached())
-                 ballState = 6; //bottom wall hit, bounce to 5
+                 ballState = 6; //bottom wall hit, bounce to 6
              //check left wall reached
              else if(left_wall_reached())
              {
                  //If racket is here bounce, otherwise it's a goal
                             if(P1_racket_hit())
                             {
-                               if(R1Dir == UP) //up effect on ball
+                               if(yBall < yR1) //up effect on ball
                                { ballState = 12; }
                                else
                                {
-                                   if(R1Dir == DOWN) //down effect on ball
+                                   if(yBall > yR1) //down effect on ball
                                     {   ballState = 14; }
                                    else //no effect, normal bounce
                                     {   ballState = 13; }
@@ -374,11 +374,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P1_racket_hit())
                             {
-                               if(R1Dir == UP) //up effect on ball
+                               if(yBall < yR1) //up effect on ball
                                { ballState = 12; }
                                else
                                {
-                                   if(R1Dir == DOWN) //down effect on ball
+                                   if(yBall > yR1) //down effect on ball
                                     {   ballState = 13; }
                                    else //no effect, normal bounce
                                     {   ballState = 12; }
@@ -403,11 +403,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P2_racket_hit())
                             {
-                               if(R2Dir == UP) //up effect on ball
+                               if(yBall < yR2) //up effect on ball
                                { ballState = 11; }
                                else
                                {
-                                   if(R2Dir == DOWN) //down effect on ball
+                                   if(yBall > yR2) //down effect on ball
                                     {   ballState = 10; }
                                    else //no effect, normal bounce
                                     {   ballState = 11; }
@@ -431,11 +431,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P2_racket_hit())
                             {
-                               if(R2Dir == UP) //up effect on ball
+                               if(yBall < yR2) //up effect on ball
                                { ballState = 11; }
                                else
                                {
-                                   if(R2Dir == DOWN) //down effect on ball
+                                   if(yBall > yR2) //down effect on ball
                                     {   ballState = 9; }
                                    else //no effect, normal bounce
                                     {   ballState = 10; }
@@ -459,11 +459,11 @@ void ball_update(void)
                  //If racket is here bounce, otherwise it's a goal
                             if(P2_racket_hit())
                             {
-                               if(R2Dir == UP) //up effect on ball
+                               if(yBall < yR2) //up effect on ball
                                { ballState = 10; }
                                else
                                {
-                                   if(R2Dir == DOWN) //down effect on ball
+                                   if(yBall > yR2) //down effect on ball
                                     {   ballState = 8; }
                                    else //no effect, normal bounce
                                     {   ballState = 9; }

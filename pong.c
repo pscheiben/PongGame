@@ -63,10 +63,10 @@ void main(void)
 
   //Initialize LCD and backlight
   LCDInit();
+
   //Initialize Menu elemets
   GameMenuInit();
-  //Clear the Menu
-  //GameMenuClearScr;
+
   //Initialize game variables
   GameStartInit();
 
@@ -130,23 +130,18 @@ void GameStartInit()
  //Initial position of racket 1
  xR1 = 0; //left-hand side
  yR1 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
- xR1_old = xR1;  //trail init is the same as the actual position
- yR1_old = yR1;
+ yR1_old = yR1; //trail init is the same as the actual position
 
  //Initial position of racket 2
  xR2 = LCD_COL-2; //right-hand side
  yR2 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
- xR2_old = xR2; //trail init is the same as the actual position
- yR2_old = yR2;
+ yR2_old = yR2;//trail init is the same as the actual position
 
 }
 
 //Read user inputs here (CPU is awaken by ADC12 conversion)
 void UserInputs_update(void)
 {
- R1Dir = STOP;
- R2Dir = STOP;
-
 
  if(!(P2IN & BIT4)) //JUP pressed
  {
@@ -154,7 +149,6 @@ void UserInputs_update(void)
   {
    yR1=yR1-2; //move racket1 2 pixel up
   }
-  R1Dir = UP;
  }
 
  if(!(P2IN & BIT5)) //JDOWN pressed
@@ -163,7 +157,6 @@ void UserInputs_update(void)
   {
    yR1=yR1+2; //move racket1 2 pixel down
   }
-  R1Dir = DOWN;
  }
 
  if(!(P2IN & BIT6)) //SW1 pressed
@@ -172,7 +165,6 @@ void UserInputs_update(void)
    {
     yR2=yR2-2; //move racket 2 pixel down
    }
-   R2Dir = UP;
   }
 
  if(!(P2IN & BIT7)) //SW2 pressed
@@ -181,7 +173,6 @@ void UserInputs_update(void)
    {
     yR2=yR2+2; //move racket 2 pixel down
    }
-   R2Dir = DOWN;
   }
 }
 
@@ -190,23 +181,23 @@ void LCD_update(void)
 {
  //update older positions to clear old racket and draw new one
  //clear old racket1
- halLcdVLine(xR1_old, yR1_old - HALF_RACKET_SIZE, yR1_old + HALF_RACKET_SIZE, PIXEL_OFF);
- halLcdVLine(xR1_old + 1, yR1_old - HALF_RACKET_SIZE, yR1_old + HALF_RACKET_SIZE, PIXEL_OFF);
+ halLcdVLine(xR1, yR1_old - HALF_RACKET_SIZE, yR1_old + HALF_RACKET_SIZE, PIXEL_OFF);
+ halLcdVLine(xR1 + 1, yR1_old - HALF_RACKET_SIZE, yR1_old + HALF_RACKET_SIZE, PIXEL_OFF);
  //Draw new racket1
  halLcdVLine(xR1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);
  halLcdVLine(xR1 + 1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);
  yR1_old = yR1;
- xR1_old = xR1;
+
 
  //update older positions to clear old racket2 and draw new one
  //clear old racket2
- halLcdVLine(xR2_old, yR2_old - HALF_RACKET_SIZE, yR2_old + HALF_RACKET_SIZE, PIXEL_OFF);
- halLcdVLine(xR2_old + 1, yR2_old - HALF_RACKET_SIZE, yR2_old + HALF_RACKET_SIZE, PIXEL_OFF);
+ halLcdVLine(xR2, yR2_old - HALF_RACKET_SIZE, yR2_old + HALF_RACKET_SIZE, PIXEL_OFF);
+ halLcdVLine(xR2 + 1, yR2_old - HALF_RACKET_SIZE, yR2_old + HALF_RACKET_SIZE, PIXEL_OFF);
  //Draw new racket2
  halLcdVLine(xR2, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON);
  halLcdVLine(xR2 + 1, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON);
  yR2_old = yR2;
- xR2_old = xR2;
+
 
 
  //Clear oldest ball

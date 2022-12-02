@@ -12,7 +12,7 @@
 #define LCD_CONTRAST_LEVEL 90 //70 to 127
 
 
-#define HALF_RACKET_SIZE 5 //racket width in pixels
+#define HALF_RACKET_SIZE 7 //racket width in pixels
 #define BALL_RADIUS 1 //ball radius in pixels
 
 
@@ -25,6 +25,7 @@
 //Tracking the menu and the settings for the game
 volatile int active_menu_id;
 
+
 //flags marking when updates must be done
 volatile unsigned int InputUpdatePending;
 volatile unsigned int BallUpdatePending;
@@ -36,16 +37,13 @@ volatile int xBall, yBall; //Current ball position
 volatile int xBall_old, yBall_old; //For ball trail position
 volatile int xBall_old2, yBall_old2; //To delete old ball position
 
-//Racket handling
-enum VDir {STOP, UP, DOWN}; //last racket movement vertical directions
+
 //Racket1's variables
 volatile int xR1, yR1; //Current racket 1 position
-volatile int xR1_old, yR1_old; //To delete old racket position
-volatile enum VDir R1Dir; //last movement direction for racket 1 (used for ball control)
+volatile int yR1_old; //To delete old racket position
 
 //Racket2's variables
 volatile int xR2, yR2; //Current racket 2 position
-volatile int xR2_old, yR2_old; //To delete old racket position
-volatile enum VDir R2Dir; //last movement direction for racket 2 (used for ball control)
+volatile int yR2_old; //To delete old racket position
 
 #endif /* GENERAL_SETTINGS_H_ */

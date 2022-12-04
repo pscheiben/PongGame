@@ -45,7 +45,7 @@ char LCD_string[5]="x.xV\0"; //test only
 
 //main function
 void main(void)
- {
+   {
   volatile unsigned long  batt_voltage; 
   
   WDTCTL = WDTPW+WDTHOLD; // Stop WDT
@@ -70,7 +70,7 @@ void main(void)
   LCDInit();
 
   //Initialize Menu elemets
-  GameMenuInit();
+//  GameMenuInit();
 
   //Initialize game variables
   GameStartInit();
@@ -123,23 +123,25 @@ void GameStartInit()
 {
 
  // ball init to avoid the left top corner visual artifact
- yBall = (LCD_ROW + INF_BRD_WIDTH) >> 1;
  xBall = LCD_COL >> 1;
+ yBall = LCD_ROW >> 1;
  xBall_old2 = xBall;
  yBall_old2 = yBall;
  xBall_old = xBall;
  yBall_old = yBall;
 
 
- //Initial position of racket 1
- xR1 = 0; //left-hand side
- yR1 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
+ //Initial position of racket 1 player one bottom side
+ xR1 = (LCD_COL >>1) - HALF_RACKET_SIZE;
+ yR1 = LCD_ROW - 2;
  yR1_old = yR1; //trail init is the same as the actual position
+ xR1_old = xR1;
 
- //Initial position of racket 2
- xR2 = LCD_COL-2; //right-hand side
- yR2 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
+ //Initial position of racket 2 player two top side
+ xR2 = (LCD_COL >>1) - HALF_RACKET_SIZE;
+ yR2 = 0;
  yR2_old = yR2;//trail init is the same as the actual position
+ xR2_old = xR2;
 
  InputUpdatePending = 1; //avoid fast starting ball movement
  InputChangePending = 1;
@@ -149,56 +151,56 @@ void GameStartInit()
  ballState = 0; //initial ball state
 
 
- //Draw top and bottom walls and information frame
+ //Draw left and right walls
 
- halLcdHLine(0, LCD_COL, LCD_ROW-1, PIXEL_ON); //halLcdHLine is more convenient then halLcdLine
- halLcdHLine(0, LCD_COL, INF_BRD_WIDTH, PIXEL_ON);
- information_board_draw();
+ halLcdVLine(INF_SLIDE_WIDTH-1, 0, LCD_ROW, PIXEL_ON); //halLcdVLine is more convenient then halLcdLine, it does not draw LCD_ROW pixel
+ halLcdVLine(LCD_COL-1-INF_SLIDE_WIDTH, 0, LCD_ROW, PIXEL_ON);
+// information_board_draw();
 
 //Draw the two racket
- halLcdVLine(xR1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);    //Drawing the 1st racket at init
- halLcdVLine(xR1 + 1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);
+ halLcdHLine(xR1, xR1 + HALF_RACKET_SIZE*2+1, yR1, PIXEL_ON);    //Drawing the 1st racket at init
+ halLcdHLine(xR1, xR1 + HALF_RACKET_SIZE*2+1, yR1 + 1, PIXEL_ON);
 
- halLcdVLine(xR2, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON); //Drawing the 2nd racket at the init
- halLcdVLine(xR2 + 1, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON);
+ halLcdHLine(xR2, xR2 + HALF_RACKET_SIZE*2+1, yR2, PIXEL_ON); //Drawing the 2nd racket at the init
+ halLcdHLine(xR2, xR2 + HALF_RACKET_SIZE*2+1, yR2 + 1, PIXEL_ON);
 }
 
 //Read user inputs here (CPU is awaken by ADC12 conversion)
 void UserInputs_update(void)
 {
 
- if(!(P2IN & BIT4)) //JUP pressed
- {
-  if (yR1 > HALF_RACKET_SIZE + INF_BRD_WIDTH + 1) //avoid overwriting top wall
-  {
-   yR1=yR1-2; //move racket1 2 pixel up
-   InputChangePending = 1;
-  }
- }
-
- if(!(P2IN & BIT5)) //JDOWN pressed
- {
-  if (yR1 < LCD_ROW-1-HALF_RACKET_SIZE) //avoid overwriting Bottom wall
-  {
-   yR1=yR1+2; //move racket1 2 pixel down
-   InputChangePending = 1;
-  }
- }
-
  if(!(P2IN & BIT6)) //SW1 pressed
+ {
+  if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
   {
-   if (yR2 > HALF_RACKET_SIZE + INF_BRD_WIDTH + 1) //avoid overwriting top wall
+   xR1=xR1-2; //move racket1 2 pixel left
+   InputChangePending = 1;
+  }
+ }
+
+ if(!(P2IN & BIT7)) //SW2 pressed
+ {
+  if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting Bottom wall
+  {
+   xR1=xR1+2; //move racket1 2 pixel right
+   InputChangePending = 1;
+  }
+ }
+
+ if(!(P2IN & BIT1)) //JS left pressed
+  {
+   if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting top wall
    {
-    yR2=yR2-2; //move racket 2 pixel down
+    xR2=xR2-2; //move racket 2 pixel left
     InputChangePending = 1;
    }
   }
 
- if(!(P2IN & BIT7)) //SW2 pressed
+ if(!(P2IN & BIT2)) //JS right pressed
   {
-   if (yR2 < LCD_ROW-1-HALF_RACKET_SIZE) //avoid overwriting Bottom wall
+   if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
    {
-    yR2=yR2+2; //move racket 2 pixel down
+    xR2=xR2+2; //move racket 2 pixel right
     InputChangePending = 1;
    }
   }
@@ -222,24 +224,25 @@ void LCD_update(void)
 
  if((InputChangePending==1) || (ballState == 0))
  {
-         //update older positions to clear old racket and draw new one
-         //clear old racket1
-         halLcdVLine(xR1, (yR1_old - HALF_RACKET_SIZE), (yR1_old + HALF_RACKET_SIZE), PIXEL_OFF);
-         halLcdVLine((xR1 + 1), (yR1_old - HALF_RACKET_SIZE), (yR1_old + HALF_RACKET_SIZE), PIXEL_OFF);
+
+         //Clear old racket2
+         halLcdHLine(xR1_old, xR1_old + HALF_RACKET_SIZE*2+1, yR1, PIXEL_OFF);    //Drawing the 1st racket at init
+         halLcdHLine(xR1_old, xR1_old + HALF_RACKET_SIZE*2+1, yR1 + 1, PIXEL_OFF);
          //Draw new racket1
-         halLcdVLine(xR1, (yR1 - HALF_RACKET_SIZE), (yR1 + HALF_RACKET_SIZE), PIXEL_ON);
-         halLcdVLine((xR1 + 1), (yR1 - HALF_RACKET_SIZE), (yR1 + HALF_RACKET_SIZE), PIXEL_ON);
-         yR1_old = yR1;
+         halLcdHLine(xR1, xR1 + HALF_RACKET_SIZE*2+1, yR1, PIXEL_ON);    //Drawing the 1st racket at init
+         halLcdHLine(xR1, xR1 + HALF_RACKET_SIZE*2+1, yR1 + 1, PIXEL_ON);
+         //update older positions to clear old racket1
+         xR1_old = xR1;
 
-
-      //update older positions to clear old racket2 and draw new one
-         //clear old racket2
-         halLcdVLine(xR2, (yR2_old - HALF_RACKET_SIZE), (yR2_old + HALF_RACKET_SIZE), PIXEL_OFF);
-         halLcdVLine((xR2 + 1), (yR2_old - HALF_RACKET_SIZE), (yR2_old + HALF_RACKET_SIZE), PIXEL_OFF);
+         //Clear old racket2
+         halLcdHLine(xR2_old, xR2_old + HALF_RACKET_SIZE*2+1, yR2, PIXEL_OFF); //Drawing the 2nd racket at the init
+         halLcdHLine(xR2_old, xR2_old + HALF_RACKET_SIZE*2+1, yR2 + 1, PIXEL_OFF);
          //Draw new racket2
-         halLcdVLine(xR2, (yR2 - HALF_RACKET_SIZE), (yR2 + HALF_RACKET_SIZE), PIXEL_ON);
-         halLcdVLine((xR2 + 1), (yR2 - HALF_RACKET_SIZE),( yR2 + HALF_RACKET_SIZE), PIXEL_ON);
-         yR2_old = yR2;
+         halLcdHLine(xR2, xR2 + HALF_RACKET_SIZE*2+1, yR2, PIXEL_ON); //Drawing the 2nd racket at the init
+         halLcdHLine(xR2, xR2 + HALF_RACKET_SIZE*2+1, yR2 + 1, PIXEL_ON);
+         //update older positions to clear old racket2
+         xR2_old = xR2;
+
  }
  else
  {
@@ -257,8 +260,6 @@ void DrawBall(int x, int y)
     halLcdPixel(x+1, y, PIXEL_ON);
     halLcdPixel(x, y-1, PIXEL_ON);
     halLcdPixel(x, y+1, PIXEL_ON);
-
-
 }
 
 void DrawBallTrail(int x, int y)
@@ -268,8 +269,6 @@ void DrawBallTrail(int x, int y)
     halLcdPixel(x+1, y, PIXEL_LIGHT);
     halLcdPixel(x, y-1, PIXEL_LIGHT);
     halLcdPixel(x, y+1, PIXEL_LIGHT);
-
-
 }
 
 void ClearBall(int x, int y)
@@ -279,7 +278,6 @@ void ClearBall(int x, int y)
     halLcdPixel(x+1, y, PIXEL_OFF);
     halLcdPixel(x, y-1, PIXEL_OFF);
     halLcdPixel(x, y+1, PIXEL_OFF);
-
 }
 
 // create string with voltage measurement

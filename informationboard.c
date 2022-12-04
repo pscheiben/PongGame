@@ -29,9 +29,11 @@ void information_board_draw(void)
 //Currently 3 circle with decreasing radius
 void draw_life(x,y)
 {
+
     halLcdCircle(x,y,LIFE_IND_RADIUS,PIXEL_ON);
     halLcdCircle(x,y,LIFE_IND_RADIUS-1,PIXEL_DARK);
     halLcdCircle(x,y,LIFE_IND_RADIUS-2,PIXEL_LIGHT);
+
 
 }
 

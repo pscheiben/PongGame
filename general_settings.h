@@ -12,7 +12,7 @@
 #define LCD_CONTRAST_LEVEL 90 //70 to 127
 
 
-#define HALF_RACKET_SIZE 7 //racket width in pixels
+#define HALF_RACKET_SIZE 4 //racket width in pixels
 #define BALL_RADIUS 1 //ball radius in pixels
 
 

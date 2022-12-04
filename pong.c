@@ -28,6 +28,10 @@ void TimerA1Init(void);
 void GameStartInit(void);
 void UserInputs_update(void);
 void LCD_update(void);
+void DrawBall(int, int);
+void DrawBallTrail(int, int);
+void ClearBall(int, int);
+
 
 
 volatile unsigned int LCD_intervals = 0; //count number of base intervals elapsed
@@ -41,7 +45,7 @@ char LCD_string[5]="x.xV\0"; //test only
 
 //main function
 void main(void)
-{
+ {
   volatile unsigned long  batt_voltage; 
   
   WDTCTL = WDTPW+WDTHOLD; // Stop WDT
@@ -113,14 +117,11 @@ void LCDInit(void)
  halLcdClearScreen();
 }
 
-//This function can be used to initialize game variables at boot-up
+//This function can be used to initialise game variables at boot-up
 //Most variables are  declared into general_settings.h
 void GameStartInit()
 {
- InputUpdatePending = 0;
- InputChangePending = 0;
- BallUpdatePending = 0;
- LCDUpdatePending = 0;
+
  // ball init to avoid the left top corner visual artifact
  yBall = (LCD_ROW + INF_BRD_WIDTH) >> 1;
  xBall = LCD_COL >> 1;
@@ -128,7 +129,25 @@ void GameStartInit()
  yBall_old2 = yBall;
  xBall_old = xBall;
  yBall_old = yBall;
+
+
+ //Initial position of racket 1
+ xR1 = 0; //left-hand side
+ yR1 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
+ yR1_old = yR1; //trail init is the same as the actual position
+
+ //Initial position of racket 2
+ xR2 = LCD_COL-2; //right-hand side
+ yR2 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
+ yR2_old = yR2;//trail init is the same as the actual position
+
+ InputUpdatePending = 1; //avoid fast starting ball movement
+ InputChangePending = 1;
+ BallUpdatePending = 1;
+ LCDUpdatePending = 1;
+
  ballState = 0; //initial ball state
+
 
  //Draw top and bottom walls and information frame
 
@@ -136,17 +155,10 @@ void GameStartInit()
  halLcdHLine(0, LCD_COL, INF_BRD_WIDTH, PIXEL_ON);
  information_board_draw();
 
- //Initial position of racket 1
- xR1 = 0; //left-hand side
- yR1 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
- yR1_old = yR1; //trail init is the same as the actual position
+//Draw the two racket
  halLcdVLine(xR1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);    //Drawing the 1st racket at init
  halLcdVLine(xR1 + 1, yR1 - HALF_RACKET_SIZE, yR1 + HALF_RACKET_SIZE, PIXEL_ON);
 
- //Initial position of racket 2
- xR2 = LCD_COL-2; //right-hand side
- yR2 = (LCD_ROW + INF_BRD_WIDTH) >> 1; //middle row with information board offset
- yR2_old = yR2;//trail init is the same as the actual position
  halLcdVLine(xR2, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON); //Drawing the 2nd racket at the init
  halLcdVLine(xR2 + 1, yR2 - HALF_RACKET_SIZE, yR2 + HALF_RACKET_SIZE, PIXEL_ON);
 }
@@ -197,14 +209,11 @@ void LCD_update(void)
 {
 
  //Clear oldest ball
- halLcdCircle(xBall_old2, yBall_old2, BALL_RADIUS, PIXEL_OFF);
- halLcdPixel(xBall_old2, yBall_old2, PIXEL_OFF);
+ ClearBall(xBall_old2,yBall_old2);
  //Draw ball trail
- halLcdCircle(xBall_old, yBall_old, BALL_RADIUS, PIXEL_ON);
- halLcdPixel(xBall_old, yBall_old, PIXEL_ON);
+ DrawBallTrail(xBall_old,yBall_old);
  //Draw new ball
- halLcdCircle(xBall, yBall, BALL_RADIUS, PIXEL_ON);
- halLcdPixel(xBall, yBall, PIXEL_ON);
+ DrawBall(xBall,yBall);
  //update older positions for drawing ball trail and deleting old ball
  xBall_old2=xBall_old;
  yBall_old2=yBall_old;
@@ -232,11 +241,46 @@ void LCD_update(void)
          halLcdVLine((xR2 + 1), (yR2 - HALF_RACKET_SIZE),( yR2 + HALF_RACKET_SIZE), PIXEL_ON);
          yR2_old = yR2;
  }
+ else
+ {
+
+ }
  InputChangePending==0;
 }
 
 
 
+void DrawBall(int x, int y)
+{
+    halLcdPixel(x, y, PIXEL_ON);
+    halLcdPixel(x-1, y, PIXEL_ON);
+    halLcdPixel(x+1, y, PIXEL_ON);
+    halLcdPixel(x, y-1, PIXEL_ON);
+    halLcdPixel(x, y+1, PIXEL_ON);
+
+
+}
+
+void DrawBallTrail(int x, int y)
+{
+    halLcdPixel(x, y, PIXEL_LIGHT);
+    halLcdPixel(x-1, y, PIXEL_LIGHT);
+    halLcdPixel(x+1, y, PIXEL_LIGHT);
+    halLcdPixel(x, y-1, PIXEL_LIGHT);
+    halLcdPixel(x, y+1, PIXEL_LIGHT);
+
+
+}
+
+void ClearBall(int x, int y)
+{
+    halLcdPixel(x, y, PIXEL_OFF);
+    halLcdPixel(x-1, y, PIXEL_OFF);
+    halLcdPixel(x+1, y, PIXEL_OFF);
+    halLcdPixel(x, y-1, PIXEL_OFF);
+    halLcdPixel(x, y+1, PIXEL_OFF);
+
+}
 
 // create string with voltage measurement
 void format_voltage_string(unsigned int voltage)

@@ -25,7 +25,6 @@ void information_board_draw(void)
 {
     halLcdHLine(0, INF_SLIDE_WIDTH, LCD_ROW>>1, PIXEL_ON);  //division line drawing
     halLcdHLine(LCD_COL-INF_SLIDE_WIDTH, LCD_COL, LCD_ROW>>1, PIXEL_ON);  //division line drawing
-
     generate_life_score(MAX_PLAYER_LIFE, MAX_PLAYER_LIFE); //generate lives indicator for both player
 
 }
@@ -76,6 +75,8 @@ void generate_life_score(int p1_life, int p2_life)
     int i;
     p1_life_counter = p1_life; //Player 1 life counter set
     p2_life_counter = p2_life; //Player 2 life counter set
+    if(active_menu_id==1) p1_life_counter=p1_life_counter-2;
+
 
     for(i=0;i<p1_life_counter;i++)
     {

@@ -57,7 +57,10 @@ int left_wall_reached()
 int P1_racket_hit() //check ball vs left racket
 {
  if( (xBall >= (xR1)) && (xBall <= (xR1 + 2*HALF_RACKET_SIZE)) )
-     return 1;
+ {
+     P1OUT ^= BIT0; //pin 1 toogle
+      return 1;
+ }
  else
      return 0;
 }
@@ -65,7 +68,10 @@ int P1_racket_hit() //check ball vs left racket
 int P2_racket_hit() //check ball vs right racket
 {
  if( (xBall >= (xR2)) && (xBall <= (xR2 + 2*HALF_RACKET_SIZE)))
+ {
+     P1OUT ^= BIT1; //pin 1 toogle
      return 1;
+ }
  else
      return 0;
 }

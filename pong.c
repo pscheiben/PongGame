@@ -45,7 +45,7 @@ char LCD_string[5]="x.xV\0"; //test only
 
 //main function
 void main(void)
-   {
+{
   volatile unsigned long  batt_voltage; 
   
   WDTCTL = WDTPW+WDTHOLD; // Stop WDT
@@ -180,29 +180,74 @@ void UserInputs_update(void)
 
  if(!(P2IN & BIT7)) //SW2 pressed
  {
-  if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting Bottom wall
+  if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
   {
    xR1=xR1+2; //move racket1 2 pixel right
    InputChangePending = 1;
   }
  }
 
- if(!(P2IN & BIT1)) //JS left pressed
+ switch(active_menu_id)
   {
-   if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting top wall
-   {
-    xR2=xR2-2; //move racket 2 pixel left
-    InputChangePending = 1;
-   }
-  }
+  case 0: //"Start" state, init ball position
+          if(xBall<(xR2 + HALF_RACKET_SIZE))
+          {
+              if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                      {
+                          xR2=xR2-1; //move racket 2 pixel left
+                          InputChangePending = 1;
+                      }
+          }
+          else
+          {
+              if(xBall>(xR2 + HALF_RACKET_SIZE))
+              {
+                  if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
+                                  {
+                                      xR2=xR2+1; //move racket 2 pixel left
+                                      InputChangePending = 1;
+                                  }
+              }
+          }
+          break;
+  case 1: //"Start" state, init ball position
+      if(!(P2IN & BIT1)) //JS left pressed
+      {
+          if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+          {
+              xR2=xR2-2; //move racket 2 pixel left
+              InputChangePending = 1;
+          }
+      }
 
- if(!(P2IN & BIT2)) //JS right pressed
-  {
-   if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
-   {
-    xR2=xR2+2; //move racket 2 pixel right
-    InputChangePending = 1;
-   }
+      if(!(P2IN & BIT2)) //JS right pressed
+      {
+          if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+          {
+             xR2=xR2+2; //move racket 2 pixel right
+             InputChangePending = 1;
+          }
+      }
+          break;
+  case 2: //"Start" state, init ball position
+         if(!(P2IN & BIT1)) //JS left pressed
+         {
+             if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+             {
+                 xR2=xR2-2; //move racket 2 pixel left
+                 InputChangePending = 1;
+             }
+         }
+
+         if(!(P2IN & BIT2)) //JS right pressed
+         {
+             if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+             {
+                xR2=xR2+2; //move racket 2 pixel right
+                InputChangePending = 1;
+             }
+         }
+         break;
   }
 }
 
@@ -313,6 +358,7 @@ void halBoardInit(void)
   PDOUT  = 0; PDDIR  = 0xFFFF; PDSEL  = 0;
   // P10.0 to USB RST pin, if enabled with J5
   PEOUT  = 0; PEDIR  = 0xFEFF; PESEL  = 0;
+  PFOUT  = 0; PEDIR  = 0xFEFF; PESEL  = 0;
   P11OUT = 0; P11DIR = 0xFF;   P11SEL = 0;
   PJOUT  = 0; PJDIR  = 0xFF;
 
@@ -336,6 +382,11 @@ void halBoardInit(void)
 //  P2IES |= (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 interrupt edge is high to low
 //  P2IFG &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //clear interrupt flags for the joystick
 //  P2IE |= (BIT4+BIT5+BIT1+BIT2+BIT3); //Interrupt enable for the joystick
+
+   //Now configure LED1 and LED2 (P1.0+P1.1) as output
+   P1DIR |= (BIT0+BIT1); //pin 1+2 output
+
+
 
 }
 

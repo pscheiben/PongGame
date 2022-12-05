@@ -173,7 +173,11 @@ void UserInputs_update(void)
  {
   if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
   {
-   xR1=xR1-2; //move racket1 2 pixel left
+
+   if(active_menu_id==1)
+       xR1=xR1-1;
+   else
+     xR1=xR1-2; //move racket1 2 pixel left
    InputChangePending = 1;
   }
  }
@@ -182,7 +186,11 @@ void UserInputs_update(void)
  {
   if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
   {
-   xR1=xR1+2; //move racket1 2 pixel right
+
+   if(active_menu_id==1)
+       xR1=xR1+1;
+   else
+       xR1=xR1+2; //move racket1 2 pixel right
    InputChangePending = 1;
   }
  }
@@ -194,7 +202,7 @@ void UserInputs_update(void)
           {
               if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                       {
-                          xR2=xR2-1; //move racket 2 pixel left
+                          xR2=xR2-1; //move racket 1 pixel left
                           InputChangePending = 1;
                       }
           }
@@ -204,31 +212,33 @@ void UserInputs_update(void)
               {
                   if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
                                   {
-                                      xR2=xR2+1; //move racket 2 pixel left
+                                      xR2=xR2+1; //move racket 1 pixel left
                                       InputChangePending = 1;
                                   }
               }
           }
           break;
   case 1: //"Start" state, init ball position
-      if(!(P2IN & BIT1)) //JS left pressed
+      if(xBall<(xR2 + HALF_RACKET_SIZE))
       {
           if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-          {
-              xR2=xR2-2; //move racket 2 pixel left
-              InputChangePending = 1;
-          }
+                  {
+                      xR2=xR2-1; //move racket 2 pixel left
+                      InputChangePending = 1;
+                  }
       }
-
-      if(!(P2IN & BIT2)) //JS right pressed
+      else
       {
-          if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+          if(xBall>(xR2 + HALF_RACKET_SIZE))
           {
-             xR2=xR2+2; //move racket 2 pixel right
-             InputChangePending = 1;
+              if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
+                              {
+                                  xR2=xR2+1; //move racket 2 pixel left
+                                  InputChangePending = 1;
+                              }
           }
       }
-          break;
+      break;
   case 2: //"Start" state, init ball position
          if(!(P2IN & BIT1)) //JS left pressed
          {

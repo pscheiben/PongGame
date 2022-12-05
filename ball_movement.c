@@ -86,10 +86,6 @@ void ball_update(void)
  case 0: //"Start" state, init ball position
          yBall = (LCD_ROW + INF_BRD_WIDTH) >> 1;
          xBall = LCD_COL >> 1;
-         xBall_old2 = xBall;
-         yBall_old2 = yBall;
-         xBall_old = xBall;
-         yBall_old = yBall;
          //choose next state to start ball movement
          ballState = 1;
          break;

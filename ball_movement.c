@@ -488,11 +488,13 @@ void ball_update(void)
          }
          else
          {
-                       //A very simplistic game end handling
+
+                     //A very simplistic game end handling
                        halLcdClearScreen(); //CLEAR SCREEN
                        halLcdPrintLine("     Game Over", 2, OVERWRITE_TEXT);//PRINT MESSAGE
-                       halLcdPrintLine(" Middle Joystick", 6, OVERWRITE_TEXT);//PRINT MESSAGE
-                       halLcdPrintLine("  to restart ", 7, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("  Player Two Win", 4, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("     Press SW1", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("    to restart ", 7, OVERWRITE_TEXT);//PRINT MESSAGE
                        //stop TimerA1. This prevents new LCD and ball updates
                        //but user input is operational because is driven by TimerB0
                        TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
@@ -510,11 +512,13 @@ void ball_update(void)
          }
          else
          {
+
                        //A very simplistic game end handling
                        halLcdClearScreen(); //CLEAR SCREEN
                        halLcdPrintLine("    Game Over", 2, OVERWRITE_TEXT);//PRINT MESSAGE
-                       halLcdPrintLine(" Middle Joystick", 6, OVERWRITE_TEXT);//PRINT MESSAGE
-                       halLcdPrintLine("   to restart ", 7, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("  Player One Win", 4, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("     Press SW1", 6, OVERWRITE_TEXT);//PRINT MESSAGE
+                       halLcdPrintLine("    to restart ", 7, OVERWRITE_TEXT);//PRINT MESSAGE
                        //stop TimerA1. This prevents new LCD and ball updates
                        //but user input is operational because is driven by TimerB0
                        TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
@@ -524,7 +528,7 @@ void ball_update(void)
          break;
  case 17:  //Reset
 
-         while(P2IN&BIT3) //js middle is not pressed
+         while(P2IN&BIT6) //js middle is not pressed
          {
 
          }

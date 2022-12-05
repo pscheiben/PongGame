@@ -70,7 +70,7 @@ void main(void)
   LCDInit();
 
   //Initialize Menu elemets
-//  GameMenuInit();
+  GameMenuInit();
 
   //Initialize game variables
   GameStartInit();
@@ -155,7 +155,7 @@ void GameStartInit()
 
  halLcdVLine(INF_SLIDE_WIDTH-1, 0, LCD_ROW, PIXEL_ON); //halLcdVLine is more convenient then halLcdLine, it does not draw LCD_ROW pixel
  halLcdVLine(LCD_COL-1-INF_SLIDE_WIDTH, 0, LCD_ROW, PIXEL_ON);
-// information_board_draw();
+ information_board_draw();
 
 //Draw the two racket
  halLcdHLine(xR1, xR1 + HALF_RACKET_SIZE*2+1, yR1, PIXEL_ON);    //Drawing the 1st racket at init

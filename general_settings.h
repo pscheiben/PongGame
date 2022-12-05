@@ -14,7 +14,7 @@
 
 #define HALF_RACKET_SIZE 7 //racket width in pixels
 #define BALL_RADIUS 1 //ball radius in pixels
-#define INF_SLIDE_WIDTH 16 //left and right information slide in pixels
+#define INF_SLIDE_WIDTH 10 //left and right information slide in pixels
 
 
 //Timing intervals for the game

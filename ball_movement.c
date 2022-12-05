@@ -479,7 +479,7 @@ void ball_update(void)
 
  case 15:  //top player missed the ball!
          p1_life_counter --;
-         check_player1_score(p1_life_counter); //reduce the lives on the information board
+         clear_player1_score(p1_life_counter); //reduce the lives on the information board
          if(p1_life_counter>0)
          {
              ballState = 0;
@@ -501,7 +501,7 @@ void ball_update(void)
  case 16:  //bottom player missed the ball!
 
          p2_life_counter --;  //decrease the Player 2 lifecount
-         check_player2_score(p2_life_counter); //reduce the lives on the information board
+         clear_player2_score(p2_life_counter); //reduce the lives on the information board
          if(p2_life_counter>0)
          {
              ballState = 0;

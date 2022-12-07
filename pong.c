@@ -70,7 +70,7 @@ void main(void)
   LCDInit();
 
   //Initialize Menu elemets
-  GameMenuInit();
+  active_menu_id=GameMenuInit();
 
   //Initialize game variables
   GameStartInit();

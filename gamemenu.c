@@ -48,8 +48,12 @@ int GameMenuInit(void)
                         __bis_SR_register(LPM3_bits + GIE);
                         __no_operation(); //for debug
                      }
-                    halLcdClearScreen(); //CLEAR SCREEN
-                    PrintMainMenu();
+                    if((P2IN&BIT6) == 0)
+                        {
+                        halLcdClearScreen(); //CLEAR SCREEN
+                        PrintMainMenu();
+                        }
+
                     break;
                 case 2:
                     PrintCTRLSel();
@@ -60,8 +64,11 @@ int GameMenuInit(void)
                         __bis_SR_register(LPM3_bits + GIE);
                         __no_operation(); //for debug
                      }
-                    halLcdClearScreen(); //CLEAR SCREEN
-                    PrintMainMenu();
+                    if((P2IN&BIT6) == 0)
+                        {
+                        halLcdClearScreen(); //CLEAR SCREEN
+                        PrintMainMenu();
+                        }
                     break;
             }
 

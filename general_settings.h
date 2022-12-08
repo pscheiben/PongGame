@@ -25,6 +25,9 @@
 
 //Tracking the menu and the settings for the game
 volatile int active_menu_id;
+volatile int game_mode_id;
+volatile int ctrl_id;
+
 
 
 //flags marking when updates must be done

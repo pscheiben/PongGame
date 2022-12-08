@@ -19,8 +19,8 @@
 
 int GameMenuInit(void)
 {
-    int game_mode_id = 0;
-    int ctrl_id = 1;
+    game_mode_id = 0;
+    ctrl_id = 1;
     active_menu_id = 0;
     PrintMainMenu();
 
@@ -32,43 +32,56 @@ int GameMenuInit(void)
                 case 0:
                     if((P2IN&BIT6) == 0)
                     {
-                        __bis_SR_register(LPM3_bits + GIE);
-                        __no_operation(); //for debug
+
                         halLcdClearScreen(); //CLEAR SCREEN
                         return(active_menu_id);
                     }
-
+                    __bis_SR_register(LPM3_bits + GIE);
+                    __no_operation(); //for debug
                     break;
                 case 1:
-                    PrintGameMode();
-                    while(P2IN&BIT6)
-                    {
-
-                        game_mode_id=MenuSelection(game_mode_id);
-                        __bis_SR_register(LPM3_bits + GIE);
-                        __no_operation(); //for debug
-                     }
                     if((P2IN&BIT6) == 0)
+                    {
+                        PrintGameMode();
+                        while(P2IN&BIT6)
                         {
+                            game_mode_id=MenuSelection(game_mode_id);
+                            __bis_SR_register(LPM3_bits + GIE);
+                            __no_operation(); //for debug
+                        }
                         halLcdClearScreen(); //CLEAR SCREEN
                         PrintMainMenu();
-                        }
+
+                    }
 
                     break;
                 case 2:
-                    PrintCTRLSel();
-                    while(P2IN&BIT6)
-                    {
-
-                        ctrl_id=MenuSelection(ctrl_id);
-                        __bis_SR_register(LPM3_bits + GIE);
-                        __no_operation(); //for debug
-                     }
                     if((P2IN&BIT6) == 0)
+                    {
+                        PrintCTRLSel();
+                        while(P2IN&BIT6)
                         {
+                            if((P2IN&BIT7) == 0)
+                                   {
+                                       OldMenuClear(ctrl_id);
+                                       ctrl_id ++;
+
+                                       if(ctrl_id > 2)
+                                       {
+                                           ctrl_id = 1;
+                                       }
+                                       ActiveMenuDraw(ctrl_id);
+                                   }
+
+
+                            __bis_SR_register(LPM3_bits + GIE);
+                            __no_operation(); //for debug
+
+                        }
                         halLcdClearScreen(); //CLEAR SCREEN
                         PrintMainMenu();
-                        }
+
+                    }
                     break;
             }
 
@@ -115,7 +128,7 @@ void PrintGameMode(void)
     halLcdPrintLine(" One Player Hard", 3, OVERWRITE_TEXT);//PRINT MESSAGE
     halLcdPrintLine("   Multi Player ", 5, OVERWRITE_TEXT);//PRINT MESSAGE
     halLcdPrintLine(" Select     Next ", 8, INVERT_TEXT);  //PRINT MESSAGE
-    ActiveMenuDraw(active_menu_id);
+    ActiveMenuDraw(game_mode_id);
 }
 
 void PrintCTRLSel(void)
@@ -125,7 +138,7 @@ void PrintCTRLSel(void)
     halLcdPrintLine(" SW and Joysitck", 3, OVERWRITE_TEXT);//PRINT MESSAGE
     halLcdPrintLine("  Accelerometer ", 5, OVERWRITE_TEXT);//PRINT MESSAGE
     halLcdPrintLine(" Select     Next ", 8, INVERT_TEXT);  //PRINT MESSAGE
-    ActiveMenuDraw(active_menu_id);
+    ActiveMenuDraw(ctrl_id);
 }
 
 int MenuSelection(int menu_id)

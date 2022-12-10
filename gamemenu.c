@@ -90,8 +90,6 @@ int GameMenuInit(void)
      __no_operation(); //for debug
 
      }
-    halLcdClearScreen(); //CLEAR SCREEN
-
 }
 
 void ActiveMenuDraw(int menu_id)

@@ -75,7 +75,7 @@ void generate_life_score(int p1_life, int p2_life)
     int i;
     p1_life_counter = p1_life; //Player 1 life counter set
     p2_life_counter = p2_life; //Player 2 life counter set
-    if(active_menu_id==1) p1_life_counter=p1_life_counter-2;
+    if(game_mode_id==1) p1_life_counter=p1_life_counter-2;
 
 
     for(i=0;i<p1_life_counter;i++)

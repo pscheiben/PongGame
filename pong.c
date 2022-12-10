@@ -174,7 +174,7 @@ void UserInputs_update(void)
   if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
   {
 
-   if(active_menu_id==1)
+   if(game_mode_id==1)
        xR1=xR1-1;
    else
      xR1=xR1-2; //move racket1 2 pixel left
@@ -187,7 +187,7 @@ void UserInputs_update(void)
   if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
   {
 
-   if(active_menu_id==1)
+   if(game_mode_id==1)
        xR1=xR1+1;
    else
        xR1=xR1+2; //move racket1 2 pixel right
@@ -195,14 +195,14 @@ void UserInputs_update(void)
   }
  }
 
- switch(active_menu_id)
+ switch(game_mode_id)
   {
   case 0: //"Start" state, init ball position
           if(xBall<(xR2 + HALF_RACKET_SIZE))
           {
               if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                       {
-                          xR2=xR2-1; //move racket 1 pixel left
+                          xR2=xR2-2; //move racket 1 pixel left
                           InputChangePending = 1;
                       }
           }
@@ -212,7 +212,7 @@ void UserInputs_update(void)
               {
                   if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
                                   {
-                                      xR2=xR2+1; //move racket 1 pixel left
+                                      xR2=xR2+2; //move racket 1 pixel left
                                       InputChangePending = 1;
                                   }
               }
@@ -223,7 +223,7 @@ void UserInputs_update(void)
       {
           if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                   {
-                      xR2=xR2-1; //move racket 2 pixel left
+                      xR2=xR2-3; //move racket 2 pixel left
                       InputChangePending = 1;
                   }
       }
@@ -233,7 +233,7 @@ void UserInputs_update(void)
           {
               if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
                               {
-                                  xR2=xR2+1; //move racket 2 pixel left
+                                  xR2=xR2+3; //move racket 2 pixel left
                                   InputChangePending = 1;
                               }
           }

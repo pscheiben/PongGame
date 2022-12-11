@@ -55,7 +55,7 @@ void clear_life(x,y,player)
 ////check the player 1 score and update
 void clear_player1_score(int playerscore)
 {
-    if(active_menu_id==1) clear_life(1, ((LCD_ROW>>1)+((2-playerscore)*10))+3, 1); //clear the middle of the heart of life
+    if(game_mode_id==1) clear_life(1, ((LCD_ROW>>1)+((2-playerscore)*10))+3, 1); //clear the middle of the heart of life
     else clear_life(1, ((LCD_ROW>>1)+((MAX_PLAYER_LIFE-playerscore-1)*10))+3, 1); //clear the middle of the heart of life
 
 }

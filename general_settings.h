@@ -12,7 +12,7 @@
 #define LCD_CONTRAST_LEVEL 90 //70 to 127
 
 
-#define HALF_RACKET_SIZE 4 //racket width in pixels
+#define HALF_RACKET_SIZE 7 //racket width in pixels
 #define BALL_RADIUS 1 //ball radius in pixels
 #define INF_SLIDE_WIDTH 10 //left and right information slide in pixels
 
@@ -24,11 +24,9 @@
 #define BALL_INTERVAL_mS 50 //timing interval for updating ball position
 
 //Tracking the menu and the settings for the game
-volatile int active_menu_id;
-volatile int game_mode_id;
-volatile int ctrl_id;
-
-
+volatile unsigned int active_menu_id;
+volatile unsigned int game_mode_id;
+volatile unsigned int ctrl_id;
 
 //flags marking when updates must be done
 volatile unsigned int InputUpdatePending;

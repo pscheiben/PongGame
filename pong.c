@@ -8,6 +8,8 @@
 //  M. MATA
 //  GCU
 //  November 2017
+//MSP430:  Flash/FRAM usage is 11740 bytes. RAM usage is 4088 bytes.
+
 //******************************************************************************
 #include    "msp430f5438a.h"
 #include	"hal_UCS.h"
@@ -174,8 +176,8 @@ void UserInputs_update(void)
   if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
   {
 
-   if(game_mode_id==1)
-       xR1=xR1-1;
+   if(game_mode_id==0)
+       xR1=xR1-3;
    else
      xR1=xR1-2; //move racket1 2 pixel left
    InputChangePending = 1;
@@ -187,8 +189,8 @@ void UserInputs_update(void)
   if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
   {
 
-   if(game_mode_id==1)
-       xR1=xR1+1;
+   if(game_mode_id==0)
+       xR1=xR1+2;
    else
        xR1=xR1+2; //move racket1 2 pixel right
    InputChangePending = 1;
@@ -223,7 +225,7 @@ void UserInputs_update(void)
       {
           if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                   {
-                      xR2=xR2-3; //move racket 2 pixel left
+                      xR2=xR2-2; //move racket 2 pixel left
                       InputChangePending = 1;
                   }
       }
@@ -233,7 +235,7 @@ void UserInputs_update(void)
           {
               if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
                               {
-                                  xR2=xR2+3; //move racket 2 pixel left
+                                  xR2=xR2+2; //move racket 2 pixel left
                                   InputChangePending = 1;
                               }
           }

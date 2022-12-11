@@ -116,7 +116,7 @@ void ball_update(void)
 
  case 2: //move up and a bit right
              xBall = xBall + 1;
-             yBall = yBall - 2;
+             yBall = yBall - 3;
              //Check right wall bounce
              if(right_wall_reached())
                  ballState = 14; //right wall hit, bounce to 14
@@ -172,7 +172,7 @@ void ball_update(void)
              break;
 
  case 4: //move right and a bit up
-             xBall = xBall + 2;
+             xBall = xBall + 3;
              yBall = yBall - 1;
              //Check right wall bounce
              if(right_wall_reached())
@@ -200,7 +200,7 @@ void ball_update(void)
              break;
 
  case 5: //move right and a bit down
-             xBall = xBall + 2;
+             xBall = xBall + 3;
              yBall = yBall + 1;
              //Check right wall bounce
              if(right_wall_reached())
@@ -212,11 +212,11 @@ void ball_update(void)
                             if(P1_racket_hit())
                             {
                                if(xBall < xR1 + HALF_RACKET_SIZE) //up effect on ball
-                               { ballState = 4; }
+                               { ballState = 3; }
                                else
                                {
                                    if(xBall > xR1 + HALF_RACKET_SIZE) //down effect on ball
-                                    {   ballState = 3; }
+                                    {   ballState = 4; }
                                    else //no effect, normal bounce
                                     {   ballState = 4; }
                                }
@@ -259,7 +259,7 @@ void ball_update(void)
 
  case  7: //move a bit right and down
              xBall = xBall + 1;
-             yBall = yBall + 2;
+             yBall = yBall + 3;
              //Check right wall bounce
              if(right_wall_reached())
                  ballState = 9; //up wall hit, bounce to 9
@@ -310,7 +310,7 @@ void ball_update(void)
 
  case  9: //move a bit left and Down
              xBall = xBall - 1;
-             yBall = yBall + 2;
+             yBall = yBall + 3;
              //Check left wall bounce
              if(left_wall_reached())
                  ballState = 7; //left wall hit, bounce to 7
@@ -338,7 +338,7 @@ void ball_update(void)
 
 
  case 10: //move left and Down
-             xBall = xBall - 2;
+             xBall = xBall - 3;
              yBall = yBall + 2;
              //Check left wall bounce
              if(left_wall_reached())
@@ -366,7 +366,7 @@ void ball_update(void)
              break;
 
  case 11: //move left and a bit down
-             xBall = xBall - 2;
+             xBall = xBall - 3;
              yBall = yBall + 1;
              //Check left wall bounce
              if(left_wall_reached())
@@ -395,7 +395,7 @@ void ball_update(void)
 
 
  case 12: //move left and a bit up
-             xBall = xBall - 2;
+             xBall = xBall - 3;
              yBall = yBall - 1;
              //Check left wall bounce
              if(left_wall_reached())
@@ -452,7 +452,7 @@ void ball_update(void)
 
  case 14: //move a bit left and up
              xBall = xBall - 1;
-             yBall = yBall - 2;
+             yBall = yBall - 3;
              //Check left wall bounce
              if(left_wall_reached())
                  ballState = 2; //left wall hit, bounce to 2
@@ -489,15 +489,16 @@ void ball_update(void)
          else
          {
 
-                     //A very simplistic game end handling
+             //stop TimerA1. This prevents new LCD and ball updates
+             //but user input is operational because is driven by TimerB0
+             TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+                       //A very simplistic game end handling
                        halLcdClearScreen(); //CLEAR SCREEN
                        halLcdPrintLine("     Game Over", 2, OVERWRITE_TEXT);//PRINT MESSAGE
                        halLcdPrintLine("  Player Two Win", 4, OVERWRITE_TEXT);//PRINT MESSAGE
                        halLcdPrintLine("     Press SW1", 6, OVERWRITE_TEXT);//PRINT MESSAGE
                        halLcdPrintLine("    to restart ", 7, OVERWRITE_TEXT);//PRINT MESSAGE
-                       //stop TimerA1. This prevents new LCD and ball updates
-                       //but user input is operational because is driven by TimerB0
-                       TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+
                        ballState = 17;
          }
          break;
@@ -512,17 +513,17 @@ void ball_update(void)
          }
          else
          {
-
+             //stop TimerA1. This prevents new LCD and ball updates
+             //but user input is operational because is driven by TimerB0
+             TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
+             ballState = 17;
                        //A very simplistic game end handling
                        halLcdClearScreen(); //CLEAR SCREEN
                        halLcdPrintLine("    Game Over", 2, OVERWRITE_TEXT);//PRINT MESSAGE
                        halLcdPrintLine("  Player One Win", 4, OVERWRITE_TEXT);//PRINT MESSAGE
                        halLcdPrintLine("     Press SW1", 6, OVERWRITE_TEXT);//PRINT MESSAGE
                        halLcdPrintLine("    to restart ", 7, OVERWRITE_TEXT);//PRINT MESSAGE
-                       //stop TimerA1. This prevents new LCD and ball updates
-                       //but user input is operational because is driven by TimerB0
-                       TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
-                       ballState = 17;
+
 
          }
          break;

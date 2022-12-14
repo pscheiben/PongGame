@@ -23,6 +23,7 @@
 /* 5xx functions / variables */ 
 void halBoardInit(void);
 void halADCInit(void);
+void halAccPortInit(void);
 void LCDInit(void);
 void TimerB0Init(void);
 void TimerA1Init(void);
@@ -32,17 +33,17 @@ void LCD_update(void);
 void DrawBall(int, int);
 void DrawBallTrail(int, int);
 void ClearBall(int, int);
-
+void ReadAccelerometer(void);
 
 
 volatile unsigned int LCD_intervals = 0; //count number of base intervals elapsed
 volatile unsigned int Ball_intervals = 0; //count number of base intervals elapsed
 //volatile =  compiler will not optimize these variables
 
-//This is kept as an ADC12 example, and allows battery monitoring
-volatile unsigned long temp_vcc;
-void format_voltage_string(unsigned int v);
-char LCD_string[5]="x.xV\0"; //test only
+////This is kept as an ADC12 example, and allows battery monitoring
+//volatile unsigned long temp_vcc;
+//void format_voltage_string(unsigned int v);
+//char LCD_string[5]="x.xV\0"; //test only
 
 //main function
 void main(void)
@@ -52,7 +53,10 @@ void main(void)
   WDTCTL = WDTPW+WDTHOLD; // Stop WDT
   
   // Initialize board
-  halBoardInit();  
+  halBoardInit();
+
+  //ACC Power up and X, Y channel config
+  halAccPortInit();
 
   /* Initialize ADC12 & REF module to sample battery voltage */
   halADCInit();
@@ -84,10 +88,10 @@ void main(void)
 
     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
 
-     // Calculate voltage to test ADC functionality
-     // 10 * Batt voltage = 2.0V(A11/4096) * 2 * 10 = 40(A11)/4096
-     batt_voltage = (temp_vcc * 40) >> 12;
-     format_voltage_string(batt_voltage);
+//     // Calculate voltage to test ADC functionality
+//     // 10 * Batt voltage = 2.0V(A11/4096) * 2 * 10 = 40(A11)/4096
+//     batt_voltage = (temp_vcc * 40) >> 12;
+//     format_voltage_string(batt_voltage);
 
     if(InputUpdatePending)
     {
@@ -262,6 +266,8 @@ void UserInputs_update(void)
   }
 }
 
+
+
 //Update drawings in LCD screen (CPU is awaken by TimerA1 interval ints)
 void LCD_update(void)
 {
@@ -336,20 +342,28 @@ void ClearBall(int x, int y)
     halLcdPixel(x, y+1, PIXEL_OFF);
 }
 
-// create string with voltage measurement
-void format_voltage_string(unsigned int voltage)
+void ReadAccelerometer(void)
 {
-  unsigned char ones = '0';
-  unsigned char tenths = '0';
-  while(voltage >= 10)
-  {
-    ones++;
-    voltage -= 10;
-  }
-  tenths += voltage;
-  LCD_string[0] = ones;
-  LCD_string[2] = tenths;
+//    accx = ADC12MEM0;    //accx digitalisation
+//    accx = accx-accx_offset;
+//    accy = ADC12MEM1;    //accy digitalisation
+//    accy = accy-accy_offset;
 }
+
+// create string with voltage measurement
+//void format_voltage_string(unsigned int voltage)
+//{
+//  unsigned char ones = '0';
+//  unsigned char tenths = '0';
+//  while(voltage >= 10)
+//  {
+//    ones++;
+//    voltage -= 10;
+//  }
+//  tenths += voltage;
+//  LCD_string[0] = ones;
+//  LCD_string[2] = tenths;
+//}
 
 //void balanceBall(void)
 //{
@@ -474,6 +488,19 @@ void halBoardInit(void)
 
    //Now configure LED1 and LED2 (P1.0+P1.1) as output
    P1DIR |= (BIT0+BIT1); //pin 1+2 output
+}
+
+void halAccPortInit(void)
+{
+    //Configure ACC Power port 6.0
+    P6SEL |= BIT0; //GPIO function
+    P6DIR |= BIT0; //Power pin output
+    P6OUT |= BIT0; //ACC power - 6.0 out HIGH
+
+    //Configure Accx, Accy, which are port 6.1, 6.2
+    P6SEL |= (BIT1 + BIT2); //GPIO function
+    P6DIR &= ~(BIT1 + BIT2); //accx, accy, accz as input
+
 
 
 
@@ -489,10 +516,10 @@ void halADCInit(void)
 
   //define conversion sequence (just Batt voltage so only ADC12MEM0 used)
   ADC12MCTL0 = ADC12SREF_1 + ADC12INCH_1;// ADC input ch A1 = ACCx
-  ADC12MCTL1 = ADC12SREF_1 + ADC12INCH_2;// ADC input ch A2 = ACCy
-  ADC12MCTL2 = ADC12SREF_1 + ADC12INCH_3 + ADC12EOS;// ADC input ch A3 = ACCz
+  ADC12MCTL1 = ADC12SREF_1 + ADC12INCH_2 + ADC12EOS;// ADC input ch A2 = ACCy + EndOfSequence
+//  ADC12MCTL2 = ADC12SREF_1 + ADC12INCH_3 + ADC12EOS;// ADC input ch A3 = ACCz
 
-  ADC12IE |= BIT2;                             //Enable ADC12MEM0IFG interrupt
+  ADC12IE |= BIT1;                             //Enable ADC12MEM0IFG interrupt
 
   /* Initialize the shared reference module */
   REFCTL0 |= REFMSTR + REFVSEL_1 + REFON;      // Configure internal 2.0V reference
@@ -589,18 +616,19 @@ __interrupt void ADC12ISR (void)
   case  2: break;                  // Vector  2:  ADC overflow
   case  4: break;                  // Vector  4:  ADC timing overflow
   case  6:                         // Vector  6:  ADC12IFG0, last conversion now
-      //Data is ready (both MEM0 converted)
-      ADC12CTL0 &= ~ADC12ENC;  // Disable conversions to disable VREF
-      REFCTL0 &= ~REFON;       // Disable internal reference
-      accx = ADC12MEM0;    //accx digitalisation
-      accy = ADC12MEM1;    //accy digitalisation
-      accz = ADC12MEM2;    //accz digitalisation
 
-      InputUpdatePending = 1;  //warn the CPU that input update is required
-      //Keep CPU active on exit to process user inputs in main loop
-      __bic_SR_register_on_exit(LPM3_bits);
-      break;
-  case  8:                         // Vector  8:  ADC12IFG1, not in use now
+  case  8:                         // Vector  8:  ADC12IFG1
+          //Data is ready (both MEM0 and MEM1 converted)
+          ADC12CTL0 &= ~ADC12ENC;  // Disable conversions to disable VREF
+          REFCTL0 &= ~REFON;       // Disable internal reference
+          accx = ADC12MEM0;
+          accy = ADC12MEM1;
+          //accz = ADC12MEM2;    //accz digitalisation
+
+          InputUpdatePending = 1;  //warn the CPU that input update is required
+          //Keep CPU active on exit to process user inputs in main loop
+          __bic_SR_register_on_exit(LPM3_bits);
+
            break;
   case 10: break;                  // Vector 10:  ADC12IFG2
   case 12: break;                  // Vector 12:  ADC12IFG3

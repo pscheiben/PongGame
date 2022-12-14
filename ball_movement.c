@@ -529,7 +529,7 @@ void ball_update(void)
          break;
  case 17:  //Reset
 
-         while(P2IN&BIT6) //js middle is not pressed
+         while(P2IN&BIT6) //SW is not pressed
          {
 
          }

@@ -28,12 +28,12 @@ void LCDInit(void);
 void TimerB0Init(void);
 void TimerA1Init(void);
 void GameStartInit(void);
-void UserInputs_update(void);
 void LCD_update(void);
 void DrawBall(int, int);
 void DrawBallTrail(int, int);
 void ClearBall(int, int);
-void ReadAccelerometer(void);
+void ReadAccX(void);
+void ReadAccY(void);
 
 
 volatile unsigned int LCD_intervals = 0; //count number of base intervals elapsed
@@ -48,8 +48,8 @@ volatile unsigned int Ball_intervals = 0; //count number of base intervals elaps
 //main function
 void main(void)
 {
-  volatile unsigned long  batt_voltage; 
-  
+    accx_offset = 0;
+    accy_offset = 0;
   WDTCTL = WDTPW+WDTHOLD; // Stop WDT
   
   // Initialize board
@@ -86,157 +86,328 @@ void main(void)
                if(ctrl_id==1)  //SW and JSTICK are selected
                {
                    while(1) //infinite main loop
-                   {
-                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
-                     __bis_SR_register(LPM3_bits + GIE);
-                     __no_operation(); //for debug
+                                      {
+                                        // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                                        __bis_SR_register(LPM3_bits + GIE);
+                                        __no_operation(); //for debug
 
-                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+                                        //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
 
+                                        if(InputUpdatePending)
+                                        {
+                                            InputUpdatePending=0;
+                                            if(!(P2IN & BIT6)) //SW1 pressed
+                                                {
+                                                    if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                        {
+                                                            xR1=xR1-3;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
+                                            if(!(P2IN & BIT7)) //SW2 pressed
+                                                {
+                                                    if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+                                                        {
+                                                            xR1=xR1+3;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
-                     if(InputUpdatePending)
-                     {
-                      InputUpdatePending=0;
-                      UserInputs_update();
-                     }
-                     if(BallUpdatePending)
-                     {
-                      BallUpdatePending=0;
-                      ball_update();
-                     }
-                     if(LCDUpdatePending)
-                     {
-                      LCDUpdatePending=0;
-                      LCD_update();
-                     }
+                                            if(xBall<(xR2 + HALF_RACKET_SIZE))
+                                                     {
+                                                         if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                                 {
+                                                                     xR2=xR2-2; //move racket 1 pixel left
+                                                                     InputChangePending = 1;
+                                                                 }
+                                                     }
+                                                     else
+                                                     {
+                                                         if(xBall>(xR2 + HALF_RACKET_SIZE))
+                                                         {
+                                                             if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
+                                                                             {
+                                                                                 xR2=xR2+2; //move racket 1 pixel left
+                                                                                 InputChangePending = 1;
+                                                                             }
+                                                         }
+                                                     }
 
-                   }
+                                        }
+                                        if(BallUpdatePending)
+                                        {
+                                         BallUpdatePending=0;
+                                         ball_update();
+                                        }
+                                        if(LCDUpdatePending)
+                                        {
+                                         LCDUpdatePending=0;
+                                         LCD_update();
+                                        }
+
+                                      } //while loop
                }
                else
                {
                    while(1) //infinite main loop
-                   {
-                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
-                     __bis_SR_register(LPM3_bits + GIE);
-                     __no_operation(); //for debug
+                                      {
+                                        // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                                        __bis_SR_register(LPM3_bits + GIE);
+                                        __no_operation(); //for debug
 
-                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+                                        //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
 
+                                        if(InputUpdatePending)
+                                        {
+                                            InputUpdatePending=0;
+                                            if(!(P2IN & BIT6)) //SW1 pressed
+                                                {
+                                                    if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                        {
+                                                            xR1=xR1-3;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
+                                            if(!(P2IN & BIT7)) //SW2 pressed
+                                                {
+                                                    if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+                                                        {
+                                                            xR1=xR1+3;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
-                     if(InputUpdatePending)
-                     {
-                      InputUpdatePending=0;
-                      UserInputs_update();
-                     }
-                     if(BallUpdatePending)
-                     {
-                      BallUpdatePending=0;
-                      ball_update();
-                     }
-                     if(LCDUpdatePending)
-                     {
-                      LCDUpdatePending=0;
-                      LCD_update();
-                     }
+                                            if(xBall<(xR2 + HALF_RACKET_SIZE))
+                                                     {
+                                                         if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                                 {
+                                                                     xR2=xR2-2; //move racket 1 pixel left
+                                                                     InputChangePending = 1;
+                                                                 }
+                                                     }
+                                                     else
+                                                     {
+                                                         if(xBall>(xR2 + HALF_RACKET_SIZE))
+                                                         {
+                                                             if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
+                                                                             {
+                                                                                 xR2=xR2+2; //move racket 1 pixel left
+                                                                                 InputChangePending = 1;
+                                                                             }
+                                                         }
+                                                     }
 
-                   }
+                                        }
+                                        if(BallUpdatePending)
+                                        {
+                                         BallUpdatePending=0;
+                                         ball_update();
+                                        }
+                                        if(LCDUpdatePending)
+                                        {
+                                         LCDUpdatePending=0;
+                                         LCD_update();
+                                        }
+
+                                      } //while loop
                }
                break;
        case HARD:
                if(ctrl_id==1)  //SW and JSTICK are selected
                {
                    while(1) //infinite main loop
-                   {
-                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
-                     __bis_SR_register(LPM3_bits + GIE);
-                     __no_operation(); //for debug
+                                      {
+                                        // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                                        __bis_SR_register(LPM3_bits + GIE);
+                                        __no_operation(); //for debug
 
-                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+                                        //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
 
+                                        if(InputUpdatePending)
+                                        {
+                                            InputUpdatePending=0;
+                                            if(!(P2IN & BIT6)) //SW1 pressed
+                                                {
+                                                    if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                        {
+                                                            xR1=xR1-2;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
+                                            if(!(P2IN & BIT7)) //SW2 pressed
+                                                {
+                                                    if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+                                                        {
+                                                            xR1=xR1+2;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
-                     if(InputUpdatePending)
-                     {
-                      InputUpdatePending=0;
-                      UserInputs_update();
-                     }
-                     if(BallUpdatePending)
-                     {
-                      BallUpdatePending=0;
-                      ball_update();
-                     }
-                     if(LCDUpdatePending)
-                     {
-                      LCDUpdatePending=0;
-                      LCD_update();
-                     }
+                                            if(xBall<(xR2 + HALF_RACKET_SIZE))
+                                                     {
+                                                         if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                                 {
+                                                                     xR2=xR2-2; //move racket 1 pixel left
+                                                                     InputChangePending = 1;
+                                                                 }
+                                                     }
+                                                     else
+                                                     {
+                                                         if(xBall>(xR2 + HALF_RACKET_SIZE))
+                                                         {
+                                                             if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
+                                                                             {
+                                                                                 xR2=xR2+2; //move racket 1 pixel left
+                                                                                 InputChangePending = 1;
+                                                                             }
+                                                         }
+                                                     }
 
-                   }
+                                        }
+                                        if(BallUpdatePending)
+                                        {
+                                         BallUpdatePending=0;
+                                         ball_update();
+                                        }
+                                        if(LCDUpdatePending)
+                                        {
+                                         LCDUpdatePending=0;
+                                         LCD_update();
+                                        }
+
+                                      } //while loop
                }
                else
                {
                    while(1) //infinite main loop
-                   {
-                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
-                     __bis_SR_register(LPM3_bits + GIE);
-                     __no_operation(); //for debug
+                                      {
+                                        // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                                        __bis_SR_register(LPM3_bits + GIE);
+                                        __no_operation(); //for debug
 
-                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+                                        //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
 
+                                        if(InputUpdatePending)
+                                        {
+                                            InputUpdatePending=0;
+                                            if(!(P2IN & BIT6)) //SW1 pressed
+                                                {
+                                                    if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                        {
+                                                            xR1=xR1-2;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
+                                            if(!(P2IN & BIT7)) //SW2 pressed
+                                                {
+                                                    if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+                                                        {
+                                                            xR1=xR1+2;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
-                     if(InputUpdatePending)
-                     {
-                      InputUpdatePending=0;
-                      UserInputs_update();
-                     }
-                     if(BallUpdatePending)
-                     {
-                      BallUpdatePending=0;
-                      ball_update();
-                     }
-                     if(LCDUpdatePending)
-                     {
-                      LCDUpdatePending=0;
-                      LCD_update();
-                     }
+                                            if(!(P2IN & BIT1)) //JS left pressed
+                                                {
+                                                   if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                       {
+                                                           xR2=xR2-2; //move racket 2 pixel left
+                                                           InputChangePending = 1;
+                                                       }
+                                                }
 
-                   }
+                                            if(!(P2IN & BIT2)) //JS right pressed
+                                                {
+                                                   if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+                                                       {
+                                                           xR2=xR2+2; //move racket 2 pixel right
+                                                           InputChangePending = 1;
+                                                       }
+                                                }
+
+                                        }
+                                        if(BallUpdatePending)
+                                        {
+                                         BallUpdatePending=0;
+                                         ball_update();
+                                        }
+                                        if(LCDUpdatePending)
+                                        {
+                                         LCDUpdatePending=0;
+                                         LCD_update();
+                                        }
+
+                                      } //while loop
                }
                break;
        case MULTI:
                if(ctrl_id==1)  //SW and JSTICK are selected
                {
                    while(1) //infinite main loop
-                   {
-                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
-                     __bis_SR_register(LPM3_bits + GIE);
-                     __no_operation(); //for debug
+                                      {
+                                        // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                                        __bis_SR_register(LPM3_bits + GIE);
+                                        __no_operation(); //for debug
 
-                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+                                        //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
 
+                                        if(InputUpdatePending)
+                                        {
+                                            InputUpdatePending=0;
+                                            if(!(P2IN & BIT6)) //SW1 pressed
+                                                {
+                                                    if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                        {
+                                                            xR1=xR1-2;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
+                                            if(!(P2IN & BIT7)) //SW2 pressed
+                                                {
+                                                    if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+                                                        {
+                                                            xR1=xR1+2;
+                                                            InputChangePending = 1;
+                                                        }
+                                                }
 
-                     if(InputUpdatePending)
-                     {
-                      InputUpdatePending=0;
-                      UserInputs_update();
-                     }
-                     if(BallUpdatePending)
-                     {
-                      BallUpdatePending=0;
-                      ball_update();
-                     }
-                     if(LCDUpdatePending)
-                     {
-                      LCDUpdatePending=0;
-                      LCD_update();
-                     }
+                                            if(!(P2IN & BIT1)) //JS left pressed
+                                                {
+                                                   if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                       {
+                                                           xR2=xR2-2; //move racket 2 pixel left
+                                                           InputChangePending = 1;
+                                                       }
+                                                }
 
+                                            if(!(P2IN & BIT2)) //JS right pressed
+                                                {
+                                                   if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+                                                       {
+                                                           xR2=xR2+2; //move racket 2 pixel right
+                                                           InputChangePending = 1;
+                                                       }
+                                                }
+
+                                        }
+                                        if(BallUpdatePending)
+                                        {
+                                         BallUpdatePending=0;
+                                         ball_update();
+                                        }
+                                        if(LCDUpdatePending)
+                                        {
+                                         LCDUpdatePending=0;
+                                         LCD_update();
+                                        }
+
+                                      } //while loop
                    }
-               }
                else
                {
                    while(1) //infinite main loop
@@ -247,12 +418,45 @@ void main(void)
 
                      //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
 
-
-
                      if(InputUpdatePending)
                      {
-                      InputUpdatePending=0;
-                      UserInputs_update();
+                         InputUpdatePending=0;
+                         if(!(P2IN & BIT6)) //SW1 pressed
+                             {
+                                 if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                     {
+                                         xR1=xR1-2;
+                                         InputChangePending = 1;
+                                     }
+                             }
+
+                         if(!(P2IN & BIT7)) //SW2 pressed
+                             {
+                                 if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+                                     {
+                                         xR1=xR1+2;
+                                         InputChangePending = 1;
+                                     }
+                             }
+
+                         if(!(P2IN & BIT1)) //JS left pressed
+                             {
+                                if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                    {
+                                        xR2=xR2-2; //move racket 2 pixel left
+                                        InputChangePending = 1;
+                                    }
+                             }
+
+                         if(!(P2IN & BIT2)) //JS right pressed
+                             {
+                                if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+                                    {
+                                        xR2=xR2+2; //move racket 2 pixel right
+                                        InputChangePending = 1;
+                                    }
+                             }
+
                      }
                      if(BallUpdatePending)
                      {
@@ -265,7 +469,7 @@ void main(void)
                       LCD_update();
                      }
 
-                   }
+                   } //while loop
                }
                break;
 
@@ -333,101 +537,101 @@ void GameStartInit()
  halLcdHLine(xR2, xR2 + HALF_RACKET_SIZE*2+1, yR2 + 1, PIXEL_ON);
 }
 
-//Read user inputs here (CPU is awaken by ADC12 conversion)
-void UserInputs_update(void)
-{
-
- if(!(P2IN & BIT6)) //SW1 pressed
- {
-  if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-  {
-
-   if(game_mode_id==0)
-       xR1=xR1-3;
-   else
-     xR1=xR1-2; //move racket1 2 pixel left
-   InputChangePending = 1;
-  }
- }
-
- if(!(P2IN & BIT7)) //SW2 pressed
- {
-  if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
-  {
-
-   if(game_mode_id==0)
-       xR1=xR1+2;
-   else
-       xR1=xR1+2; //move racket1 2 pixel right
-   InputChangePending = 1;
-  }
- }
-
- switch(game_mode_id)
-  {
-  case 0: //"Start" state, init ball position
-          if(xBall<(xR2 + HALF_RACKET_SIZE))
-          {
-              if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-                      {
-                          xR2=xR2-2; //move racket 1 pixel left
-                          InputChangePending = 1;
-                      }
-          }
-          else
-          {
-              if(xBall>(xR2 + HALF_RACKET_SIZE))
-              {
-                  if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
-                                  {
-                                      xR2=xR2+2; //move racket 1 pixel left
-                                      InputChangePending = 1;
-                                  }
-              }
-          }
-          break;
-  case 1: //"Start" state, init ball position
-      if(xBall<(xR2 + HALF_RACKET_SIZE))
-      {
-          if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-                  {
-                      xR2=xR2-2; //move racket 2 pixel left
-                      InputChangePending = 1;
-                  }
-      }
-      else
-      {
-          if(xBall>(xR2 + HALF_RACKET_SIZE))
-          {
-              if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
-                              {
-                                  xR2=xR2+2; //move racket 2 pixel left
-                                  InputChangePending = 1;
-                              }
-          }
-      }
-      break;
-  case 2: //"Start" state, init ball position
-         if(!(P2IN & BIT1)) //JS left pressed
-         {
-             if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-             {
-                 xR2=xR2-2; //move racket 2 pixel left
-                 InputChangePending = 1;
-             }
-         }
-
-         if(!(P2IN & BIT2)) //JS right pressed
-         {
-             if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
-             {
-                xR2=xR2+2; //move racket 2 pixel right
-                InputChangePending = 1;
-             }
-         }
-         break;
-  }
-}
+////Read user inputs here (CPU is awaken by ADC12 conversion)
+//void UserInputs_update(void)
+//{
+//
+// if(!(P2IN & BIT6)) //SW1 pressed
+// {
+//  if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+//  {
+//
+//   if(game_mode_id==0)
+//       xR1=xR1-3;
+//   else
+//     xR1=xR1-2; //move racket1 2 pixel left
+//   InputChangePending = 1;
+//  }
+// }
+//
+// if(!(P2IN & BIT7)) //SW2 pressed
+// {
+//  if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+//  {
+//
+//   if(game_mode_id==0)
+//       xR1=xR1+2;
+//   else
+//       xR1=xR1+2; //move racket1 2 pixel right
+//   InputChangePending = 1;
+//  }
+// }
+//
+// switch(game_mode_id)
+//  {
+//  case 0: //"Start" state, init ball position
+//          if(xBall<(xR2 + HALF_RACKET_SIZE))
+//          {
+//              if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+//                      {
+//                          xR2=xR2-2; //move racket 1 pixel left
+//                          InputChangePending = 1;
+//                      }
+//          }
+//          else
+//          {
+//              if(xBall>(xR2 + HALF_RACKET_SIZE))
+//              {
+//                  if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
+//                                  {
+//                                      xR2=xR2+2; //move racket 1 pixel left
+//                                      InputChangePending = 1;
+//                                  }
+//              }
+//          }
+//          break;
+//  case 1: //"Start" state, init ball position
+//      if(xBall<(xR2 + HALF_RACKET_SIZE))
+//      {
+//          if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+//                  {
+//                      xR2=xR2-2; //move racket 2 pixel left
+//                      InputChangePending = 1;
+//                  }
+//      }
+//      else
+//      {
+//          if(xBall>(xR2 + HALF_RACKET_SIZE))
+//          {
+//              if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
+//                              {
+//                                  xR2=xR2+2; //move racket 2 pixel left
+//                                  InputChangePending = 1;
+//                              }
+//          }
+//      }
+//      break;
+//  case 2: //"Start" state, init ball position
+//         if(!(P2IN & BIT1)) //JS left pressed
+//         {
+//             if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+//             {
+//                 xR2=xR2-2; //move racket 2 pixel left
+//                 InputChangePending = 1;
+//             }
+//         }
+//
+//         if(!(P2IN & BIT2)) //JS right pressed
+//         {
+//             if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
+//             {
+//                xR2=xR2+2; //move racket 2 pixel right
+//                InputChangePending = 1;
+//             }
+//         }
+//         break;
+//  }
+//}
 
 
 
@@ -447,7 +651,7 @@ void LCD_update(void)
  xBall_old=xBall;
  yBall_old=yBall;
 
- if((InputChangePending==1) || (ballState == 0))
+ if((InputChangePending==1) || (ballState == 0)) //only if there was movement redraw both racket
  {
 
          //Clear old racket2
@@ -505,12 +709,17 @@ void ClearBall(int x, int y)
     halLcdPixel(x, y+1, PIXEL_OFF);
 }
 
-void ReadAccelerometer(void)
+void ReadAccX(void)
 {
-//    accx = ADC12MEM0;    //accx digitalisation
-//    accx = accx-accx_offset;
-//    accy = ADC12MEM1;    //accy digitalisation
-//    accy = accy-accy_offset;
+    accx = ADC12MEM0;    //accx digitalisation
+    accdx = accx-accx_offset;
+
+}
+
+void ReadAccY(void)
+{
+     accy = ADC12MEM1;    //accy digitalisation
+     accdy = accy-accy_offset;
 }
 
 // create string with voltage measurement

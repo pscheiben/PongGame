@@ -34,9 +34,10 @@ volatile unsigned int BallUpdatePending;
 volatile unsigned int LCDUpdatePending;
 volatile unsigned int InputChangePending; //flag to update racket
 
-//accelerometer x,y,z and old x,y,z
-volatile int accx, accy, accz;
-volatile int accx_offset, accy_offset, accz_offset;
+//accelerometer x,y,z and old x,y
+volatile int accx, accy;
+volatile int accx_offset, accy_offset;
+volatile int accx_old, accy_old, accdx, accdy;
 
 //Ball handling
 volatile unsigned int ballState; //Current ball state
@@ -53,5 +54,4 @@ volatile int xR1_old, yR1_old; //To delete old racket position
 volatile int xR2, yR2; //Current racket 2 position
 volatile int xR2_old, yR2_old; //To delete old racket position
 enum { EASY, HARD, MULTI }; //game mode settings handeling
-enum { SW, ACC }; //control settings handeling
 #endif /* GENERAL_SETTINGS_H_ */

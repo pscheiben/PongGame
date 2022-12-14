@@ -20,7 +20,6 @@
 #include    "informationboard.h"
 #include    "gamemenu.h"
 
-
 /* 5xx functions / variables */ 
 void halBoardInit(void);
 void halADCInit(void);
@@ -489,8 +488,11 @@ void halADCInit(void)
   ADC12CTL1 = ADC12SHS_3 + ADC12CONSEQ_1+ADC12SHP; // ... also enable sample timer
 
   //define conversion sequence (just Batt voltage so only ADC12MEM0 used)
-  ADC12MCTL0 = ADC12SREF_1 + ADC12INCH_11 + ADC12EOS;// ADC input ch A11 = Vcc
-  ADC12IE |= BIT0;                             //Enable ADC12MEM0IFG interrupt
+  ADC12MCTL0 = ADC12SREF_1 + ADC12INCH_1;// ADC input ch A1 = ACCx
+  ADC12MCTL1 = ADC12SREF_1 + ADC12INCH_2;// ADC input ch A2 = ACCy
+  ADC12MCTL2 = ADC12SREF_1 + ADC12INCH_3 + ADC12EOS;// ADC input ch A3 = ACCz
+
+  ADC12IE |= BIT2;                             //Enable ADC12MEM0IFG interrupt
 
   /* Initialize the shared reference module */
   REFCTL0 |= REFMSTR + REFVSEL_1 + REFON;      // Configure internal 2.0V reference
@@ -590,7 +592,10 @@ __interrupt void ADC12ISR (void)
       //Data is ready (both MEM0 converted)
       ADC12CTL0 &= ~ADC12ENC;  // Disable conversions to disable VREF
       REFCTL0 &= ~REFON;       // Disable internal reference
-      temp_vcc = ADC12MEM0;    //Get Vcc digitalisation
+      accx = ADC12MEM0;    //accx digitalisation
+      accy = ADC12MEM1;    //accy digitalisation
+      accz = ADC12MEM2;    //accz digitalisation
+
       InputUpdatePending = 1;  //warn the CPU that input update is required
       //Keep CPU active on exit to process user inputs in main loop
       __bic_SR_register_on_exit(LPM3_bits);
@@ -613,12 +618,4 @@ __interrupt void ADC12ISR (void)
   }
 }
 
-////Port 2 Interrupt service Routine
-//#pragma vector=PORT2_VECTOR //attaches the functions input_ISR to P2 interrupts
-//__interrupt void input_ISR(void)
-//{
-//
-//    P2IFG &= ~(BIT6+BIT7); //clear interrupt flags for the switches
-//    P2IFG &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //clear interrupt flags for the joystick
-//    InputUpdatePending = 1;  //warn the CPU that input update is required
-//}
+

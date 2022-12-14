@@ -34,6 +34,9 @@ volatile unsigned int BallUpdatePending;
 volatile unsigned int LCDUpdatePending;
 volatile unsigned int InputChangePending;
 
+//accelerometer x,y,z and old x,y,z
+volatile int accx, accy, accz;
+volatile int accx_old, accy_old, accz_old;
 
 //Ball handling
 volatile unsigned int ballState; //Current ball state

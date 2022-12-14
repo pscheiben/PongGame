@@ -76,40 +76,203 @@ void main(void)
 
   //Initialize Menu elemets
   active_menu_id=GameMenuInit();
-
   //Initialize game variables
   GameStartInit();
 
-  while(1) //infinite main loop
-  {
-    // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode    
-    __bis_SR_register(LPM3_bits + GIE); 
-    __no_operation(); //for debug
 
-    //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+  switch(game_mode_id) //according to the game mode selection
+   {
+       case EASY:
+               if(ctrl_id==1)  //SW and JSTICK are selected
+               {
+                   while(1) //infinite main loop
+                   {
+                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                     __bis_SR_register(LPM3_bits + GIE);
+                     __no_operation(); //for debug
 
-//     // Calculate voltage to test ADC functionality
-//     // 10 * Batt voltage = 2.0V(A11/4096) * 2 * 10 = 40(A11)/4096
-//     batt_voltage = (temp_vcc * 40) >> 12;
-//     format_voltage_string(batt_voltage);
+                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
 
-    if(InputUpdatePending)
-    {
-     InputUpdatePending=0;
-     UserInputs_update();
-    }
-    if(BallUpdatePending)
-    {
-     BallUpdatePending=0;
-     ball_update();
-    }
-    if(LCDUpdatePending)
-    {
-     LCDUpdatePending=0;
-     LCD_update();
-    }
 
-  }
+
+                     if(InputUpdatePending)
+                     {
+                      InputUpdatePending=0;
+                      UserInputs_update();
+                     }
+                     if(BallUpdatePending)
+                     {
+                      BallUpdatePending=0;
+                      ball_update();
+                     }
+                     if(LCDUpdatePending)
+                     {
+                      LCDUpdatePending=0;
+                      LCD_update();
+                     }
+
+                   }
+               }
+               else
+               {
+                   while(1) //infinite main loop
+                   {
+                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                     __bis_SR_register(LPM3_bits + GIE);
+                     __no_operation(); //for debug
+
+                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+
+
+
+                     if(InputUpdatePending)
+                     {
+                      InputUpdatePending=0;
+                      UserInputs_update();
+                     }
+                     if(BallUpdatePending)
+                     {
+                      BallUpdatePending=0;
+                      ball_update();
+                     }
+                     if(LCDUpdatePending)
+                     {
+                      LCDUpdatePending=0;
+                      LCD_update();
+                     }
+
+                   }
+               }
+               break;
+       case HARD:
+               if(ctrl_id==1)  //SW and JSTICK are selected
+               {
+                   while(1) //infinite main loop
+                   {
+                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                     __bis_SR_register(LPM3_bits + GIE);
+                     __no_operation(); //for debug
+
+                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+
+
+
+                     if(InputUpdatePending)
+                     {
+                      InputUpdatePending=0;
+                      UserInputs_update();
+                     }
+                     if(BallUpdatePending)
+                     {
+                      BallUpdatePending=0;
+                      ball_update();
+                     }
+                     if(LCDUpdatePending)
+                     {
+                      LCDUpdatePending=0;
+                      LCD_update();
+                     }
+
+                   }
+               }
+               else
+               {
+                   while(1) //infinite main loop
+                   {
+                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                     __bis_SR_register(LPM3_bits + GIE);
+                     __no_operation(); //for debug
+
+                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+
+
+
+                     if(InputUpdatePending)
+                     {
+                      InputUpdatePending=0;
+                      UserInputs_update();
+                     }
+                     if(BallUpdatePending)
+                     {
+                      BallUpdatePending=0;
+                      ball_update();
+                     }
+                     if(LCDUpdatePending)
+                     {
+                      LCDUpdatePending=0;
+                      LCD_update();
+                     }
+
+                   }
+               }
+               break;
+       case MULTI:
+               if(ctrl_id==1)  //SW and JSTICK are selected
+               {
+                   while(1) //infinite main loop
+                   {
+                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                     __bis_SR_register(LPM3_bits + GIE);
+                     __no_operation(); //for debug
+
+                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+
+
+
+                     if(InputUpdatePending)
+                     {
+                      InputUpdatePending=0;
+                      UserInputs_update();
+                     }
+                     if(BallUpdatePending)
+                     {
+                      BallUpdatePending=0;
+                      ball_update();
+                     }
+                     if(LCDUpdatePending)
+                     {
+                      LCDUpdatePending=0;
+                      LCD_update();
+                     }
+
+                   }
+               }
+               else
+               {
+                   while(1) //infinite main loop
+                   {
+                     // Bit-set (LPM3_bits + GIE) in SR register to enter LPM3 mode
+                     __bis_SR_register(LPM3_bits + GIE);
+                     __no_operation(); //for debug
+
+                     //CPU CONTINUES HERE WHEN IT IS AWAKEN AT THE END OF ADC12 or TimerA1 ISR
+
+
+
+                     if(InputUpdatePending)
+                     {
+                      InputUpdatePending=0;
+                      UserInputs_update();
+                     }
+                     if(BallUpdatePending)
+                     {
+                      BallUpdatePending=0;
+                      ball_update();
+                     }
+                     if(LCDUpdatePending)
+                     {
+                      LCDUpdatePending=0;
+                      LCD_update();
+                     }
+
+                   }
+               }
+               break;
+
+   }
+
+
+
 }
 
 //LCD initialization

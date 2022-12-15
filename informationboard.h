@@ -16,9 +16,8 @@
 
 
 
-void information_board_draw(void);
-void information_board_clean(void);
-void generate_life_score(int p1_life, int p2_life); //init life generation
+void information_board_draw(void);              //Draws the structure of the information board
+void generate_life_score(int p1_life, int p2_life); //Init life generation
 void draw_life(int x, int y, int player);      //draws a life symbol into a certain position
 void clear_life(int x, int y, int player);   //clear the middle of the symbol
 void clear_player1_score(int playerscore);  //check player 1 score

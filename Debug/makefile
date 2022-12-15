@@ -4,7 +4,7 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/Users/Sejbi/Desktop/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS
+CG_TOOL_ROOT := C:/Apps/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
@@ -150,13 +150,13 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 Pong_base.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MSP430 Linker'
-	"C:/Users/Sejbi/Desktop/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --define=__MSP430F5438A__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 -z -m"Pong_base.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/Users/Sejbi/Desktop/TI/ccsv7/ccs_base/msp430/include" -i"C:/Users/Sejbi/Desktop/TI/ccsv7/ccs_base/msp430/lib/5xx_6xx_FRxx" -i"C:/Users/Sejbi/Desktop/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS/lib" -i"C:/Users/Sejbi/Desktop/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="Pong_base_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "Pong_base.out" $(ORDERED_OBJS)
+	"C:/Apps/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS/bin/cl430" -vmspx --data_model=restricted --use_hw_mpy=F5 --advice:power=all --define=__MSP430F5438A__ -g --printf_support=minimal --diag_warning=225 --diag_wrap=off --display_error_number --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 -z -m"Pong_base.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"C:/Apps/TI/ccsv7/ccs_base/msp430/include" -i"C:/Apps/TI/ccsv7/ccs_base/msp430/lib/5xx_6xx_FRxx" -i"C:/Apps/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS/lib" -i"C:/Apps/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="Pong_base_linkInfo.xml" --use_hw_mpy=F5 --rom_model -o "Pong_base.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 Pong_base.hex: $(EXE_OUTPUTS)
 	@echo 'Invoking: MSP430 Hex Utility'
-	"C:/Users/Sejbi/Desktop/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS/bin/hex430" --memwidth=8 --romwidth=8 -o "Pong_base.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/Apps/TI/ccsv7/tools/compiler/ti-cgt-msp430_16.9.4.LTS/bin/hex430" --memwidth=8 --romwidth=8 -o "Pong_base.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $@'
 	@echo ' '
 

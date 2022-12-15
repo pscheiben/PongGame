@@ -14,6 +14,7 @@
 #include "msp430f5438a.h"
 #include "informationboard.h"
 
+//this function checks collision with the top wall
 int top_wall_reached()
 {
     if(yBall <= BALL_RADIUS) //up wall reached
@@ -24,6 +25,7 @@ int top_wall_reached()
     else return 0;
 }
 
+//this function checks collision with the bottom wall
 int bottom_wall_reached()
 {
     if(yBall >= LCD_ROW-1-BALL_RADIUS) //bottom wall reached
@@ -34,29 +36,32 @@ int bottom_wall_reached()
     else return 0; //bottom wall not reached
 }
 
+//this function checks collision with the right wall  + information slide
 int right_wall_reached()
 {
-    if(xBall >= LCD_COL-1-BALL_RADIUS-INF_SLIDE_WIDTH) //right wall reached
+    if(xBall >= LCD_COL-1-BALL_RADIUS-INF_SLIDE_WIDTH) //right wall reached  + information slide
     {
-        xBall = LCD_COL-2-BALL_RADIUS-INF_SLIDE_WIDTH; //do not overwrite right wall/racket
+        xBall = LCD_COL-2-BALL_RADIUS-INF_SLIDE_WIDTH; //do not overwrite right wall/racket + information slide
         return 1;
     }
     else return 0; //right wall not reached
 }
 
+//this function checks collision with the left wall  + information slide
 int left_wall_reached()
 {
-    if(xBall <= BALL_RADIUS + INF_SLIDE_WIDTH)  //left wall reached
+    if(xBall <= BALL_RADIUS + INF_SLIDE_WIDTH)  //left wall reached  + information slide
     {
-        xBall = 1 + BALL_RADIUS + INF_SLIDE_WIDTH; //do not overwrite wall/racket1
+        xBall = 1 + BALL_RADIUS + INF_SLIDE_WIDTH; //do not overwrite wall/racket1  + information slide
         return 1;
     }
     else return 0;
 }
 
-int P1_racket_hit() //check ball vs left racket
+//check ball hit bottom racket
+int P1_racket_hit()
 {
- if( (xBall >= (xR1)) && (xBall <= (xR1 + 2*HALF_RACKET_SIZE)) )
+ if( (xBall >= (xR1)) && (xBall <= (xR1 + 2*HALF_RACKET_SIZE))) //bigger than the reference point and smaller than the ref. point + racket size
  {
      P1OUT ^= BIT0; //pin 1 toogle
       return 1;
@@ -65,11 +70,12 @@ int P1_racket_hit() //check ball vs left racket
      return 0;
 }
 
-int P2_racket_hit() //check ball vs right racket
+//check ball hit top racket
+int P2_racket_hit()
 {
- if( (xBall >= (xR2)) && (xBall <= (xR2 + 2*HALF_RACKET_SIZE)))
+ if( (xBall >= (xR2)) && (xBall <= (xR2 + 2*HALF_RACKET_SIZE))) //bigger than the reference point and smaller than the ref. point + racket size
  {
-     P1OUT ^= BIT1; //pin 1 toogle
+     P1OUT ^= BIT1; //pin 2 toogle
      return 1;
  }
  else
@@ -83,14 +89,14 @@ void ball_update(void)
  //calculate new position and bouncing
  switch(ballState)
  {
- case 0: //"Start" state, init ball position
+ case 0: //"Start" state, init ball position is middle of the screen
          yBall = (LCD_ROW + INF_BRD_WIDTH) >> 1;
          xBall = LCD_COL >> 1;
-         //choose next state to start ball movement
+         //choose next state to start ball movement based on the accelerometer
          accdx = accx-accx_offset;
          accdy = accy-accy_offset;
 
-         if(accdy>0)
+         if(accdy>0)                                    //select from 6 different state according to the X and Y values
          {
              if(accdx>2)ballState = 11;
              else
@@ -502,11 +508,11 @@ void ball_update(void)
 
 
  case 15:  //top player missed the ball!
-         p1_life_counter --;
+         p1_life_counter --;  //reduce the life-counter of player one
          clear_player1_score(p1_life_counter); //reduce the lives on the information board
-         if(p1_life_counter>0)
+         if(p1_life_counter>0)  //checks the player one is still alive
          {
-             ballState = 0;
+             ballState = 0;  //back to the start position
          }
          else
          {
@@ -522,17 +528,17 @@ void ball_update(void)
                        //stop TimerA1. This prevents new LCD and ball updates
                        //but user input is operational because is driven by TimerB0
                        TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
-                       ballState = 17;
+                       ballState = 17; //ending state for restart
          }
          break;
 
- case 16:  //bottom player missed the ball!
+ case 16:  //top player missed the ball!
 
-         p2_life_counter --;  //decrease the Player 2 lifecount
+         p2_life_counter --;  //decrease the Player 2 life-counter
          clear_player2_score(p2_life_counter); //reduce the lives on the information board
-         if(p2_life_counter>0)
+         if(p2_life_counter>0)          //checks the player two is still alive
          {
-             ballState = 0;
+             ballState = 0;  //back to the start position
          }
          else
          {
@@ -547,17 +553,17 @@ void ball_update(void)
                        //stop TimerA1. This prevents new LCD and ball updates
                        //but user input is operational because is driven by TimerB0
                        TA1CTL= TA1CTL & ~(BIT5 + BIT4); //MC=00 (bits 5,4) 0b11001111
-                       ballState = 17;
+                       ballState = 17; //ending state for restart
 
          }
          break;
- case 17:  //Reset
+ case 17:  //ending state for restart
 
-         while(P2IN&BIT6) //SW is not pressed
+         while(P2IN&BIT6) //SW1 is not pressed
          {
 
          }
-         WDTCTL=1;
+         WDTCTL=1;  //password violation restarts the uC
          break;
 }
 }

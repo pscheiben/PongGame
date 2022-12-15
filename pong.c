@@ -8,9 +8,17 @@
 //  M. MATA
 //  GCU
 //  November 2017
-//MSP430:  Flash/FRAM usage is 11740 bytes. RAM usage is 4088 bytes.
 
 //******************************************************************************
+//
+// MSP430:  Flash/FRAM usage is 12430 bytes. RAM usage is 4090 bytes.
+// Code available: github/pscheiben
+// Modified by: Peter Scheibenhoffer
+// Date: 15th December 2022
+//
+//******************************************************************************
+
+
 #include    "msp430f5438a.h"
 #include	"hal_UCS.h"
 #include 	"hal_PMM.h"
@@ -21,29 +29,24 @@
 #include    "gamemenu.h"
 
 /* 5xx functions / variables */ 
-void halBoardInit(void);
-void halADCInit(void);
-void halAccPortInit(void);
-void LCDInit(void);
-void TimerB0Init(void);
-void TimerA1Init(void);
-void GameStartInit(void);
-void LCD_update(void);
-void DrawBall(int, int);
-void DrawBallTrail(int, int);
-void ClearBall(int, int);
-void ReadAccX(void);
-void ReadAccY(void);
+void halBoardInit(void);        //board registers settings
+void halADCInit(void);          //analogue / digital converter register settings
+void halAccPortInit(void);      //accelerometer port settings
+void LCDInit(void);             //LCD initialisation
+void TimerB0Init(void);         //TimeB initialisation to drive ADC12
+void TimerA1Init(void);         //TimeA initialisation for LCD
+void GameStartInit(void);       //starting values of the game
+void LCD_update(void);          //LCD change redrawing
+void DrawBall(int, int);        //draw ball at X, Y co-ordinate
+void DrawBallTrail(int, int);   //draw a shady ball at X, Y co-ordinate
+void ClearBall(int, int);       //delete ball at X, Y co-ordinate
+void ReadAccX(void);            //reducing the accelerometer x-axis raw value with the offset raw value
+void ReadAccY(void);            //reducing the accelerometer x-axis raw value with the offset raw value
 
 
 volatile unsigned int LCD_intervals = 0; //count number of base intervals elapsed
 volatile unsigned int Ball_intervals = 0; //count number of base intervals elapsed
-//volatile =  compiler will not optimize these variables
 
-////This is kept as an ADC12 example, and allows battery monitoring
-//volatile unsigned long temp_vcc;
-//void format_voltage_string(unsigned int v);
-//char LCD_string[5]="x.xV\0"; //test only
 
 //main function
 void main(void)
@@ -75,11 +78,12 @@ void main(void)
 
   //Initialize Menu elemets
   active_menu_id=GameMenuInit();
-  //Initialize game variables
+
+  //Initialize Game variables
   GameStartInit();
 
 
-  switch(game_mode_id) //according to the game mode selection
+  switch(game_mode_id) //According to the game mode menu selection 3 cases possible
    {
        case EASY:
                if(ctrl_id==1)  //SW and JSTICK are selected
@@ -95,12 +99,12 @@ void main(void)
                                         if(InputUpdatePending)
                                         {
                                             InputUpdatePending=0;
-                                            if(!(P2IN & BIT6)) //SW1 pressed
+                                            if(!(P2IN & BIT6))                      //SW1 pressed
                                                 {
-                                                    if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                    if (xR1 > INF_SLIDE_WIDTH + 1)  //avoid overwriting left wall
                                                         {
-                                                            xR1=xR1-4;
-                                                            InputChangePending = 1;
+                                                            xR1=xR1-4;              //fast racket speed for easy mode
+                                                            InputChangePending = 1; //flag for racket LCD update
                                                         }
                                                 }
 
@@ -108,7 +112,7 @@ void main(void)
                                                 {
                                                     if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                                         {
-                                                            xR1=xR1+4;
+                                                            xR1=xR1+4;              //fast racket speed for easy mode
                                                             InputChangePending = 1;
                                                         }
                                                 }
@@ -117,7 +121,7 @@ void main(void)
                                                      {
                                                          if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                                                  {
-                                                                     xR2=xR2-2; //move racket 1 pixel left
+                                                                     xR2=xR2-2;         //move racket 2 pixel left
                                                                      InputChangePending = 1;
                                                                  }
                                                      }
@@ -127,7 +131,7 @@ void main(void)
                                                          {
                                                              if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
                                                                              {
-                                                                                 xR2=xR2+2; //move racket 1 pixel left
+                                                                                 xR2=xR2+2;       //move racket 2 pixel left
                                                                                  InputChangePending = 1;
                                                                              }
                                                          }
@@ -549,101 +553,7 @@ void GameStartInit()
  halLcdHLine(xR2, xR2 + HALF_RACKET_SIZE*2+1, yR2 + 1, PIXEL_ON);
 }
 
-////Read user inputs here (CPU is awaken by ADC12 conversion)
-//void UserInputs_update(void)
-//{
-//
-// if(!(P2IN & BIT6)) //SW1 pressed
-// {
-//  if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-//  {
-//
-//   if(game_mode_id==0)
-//       xR1=xR1-3;
-//   else
-//     xR1=xR1-2; //move racket1 2 pixel left
-//   InputChangePending = 1;
-//  }
-// }
-//
-// if(!(P2IN & BIT7)) //SW2 pressed
-// {
-//  if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
-//  {
-//
-//   if(game_mode_id==0)
-//       xR1=xR1+2;
-//   else
-//       xR1=xR1+2; //move racket1 2 pixel right
-//   InputChangePending = 1;
-//  }
-// }
-//
-// switch(game_mode_id)
-//  {
-//  case 0: //"Start" state, init ball position
-//          if(xBall<(xR2 + HALF_RACKET_SIZE))
-//          {
-//              if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-//                      {
-//                          xR2=xR2-2; //move racket 1 pixel left
-//                          InputChangePending = 1;
-//                      }
-//          }
-//          else
-//          {
-//              if(xBall>(xR2 + HALF_RACKET_SIZE))
-//              {
-//                  if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
-//                                  {
-//                                      xR2=xR2+2; //move racket 1 pixel left
-//                                      InputChangePending = 1;
-//                                  }
-//              }
-//          }
-//          break;
-//  case 1: //"Start" state, init ball position
-//      if(xBall<(xR2 + HALF_RACKET_SIZE))
-//      {
-//          if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-//                  {
-//                      xR2=xR2-2; //move racket 2 pixel left
-//                      InputChangePending = 1;
-//                  }
-//      }
-//      else
-//      {
-//          if(xBall>(xR2 + HALF_RACKET_SIZE))
-//          {
-//              if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
-//                              {
-//                                  xR2=xR2+2; //move racket 2 pixel left
-//                                  InputChangePending = 1;
-//                              }
-//          }
-//      }
-//      break;
-//  case 2: //"Start" state, init ball position
-//         if(!(P2IN & BIT1)) //JS left pressed
-//         {
-//             if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-//             {
-//                 xR2=xR2-2; //move racket 2 pixel left
-//                 InputChangePending = 1;
-//             }
-//         }
-//
-//         if(!(P2IN & BIT2)) //JS right pressed
-//         {
-//             if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
-//             {
-//                xR2=xR2+2; //move racket 2 pixel right
-//                InputChangePending = 1;
-//             }
-//         }
-//         break;
-//  }
-//}
+
 
 
 
@@ -732,96 +642,6 @@ void ReadAccY(void)
      accdy = accy-accy_offset;
 }
 
-// create string with voltage measurement
-//void format_voltage_string(unsigned int voltage)
-//{
-//  unsigned char ones = '0';
-//  unsigned char tenths = '0';
-//  while(voltage >= 10)
-//  {
-//    ones++;
-//    voltage -= 10;
-//  }
-//  tenths += voltage;
-//  LCD_string[0] = ones;
-//  LCD_string[2] = tenths;
-//}
-
-//void balanceBall(void)
-//{
-//    int x, y, dx, dy, dz, redrawCounter;
-//    unsigned char quit = 0;
-//
-//    halAccelerometerInit();
-//
-//    halButtonsInterruptDisable(BUTTON_ALL);
-//    halButtonsInterruptEnable(BUTTON_SELECT);
-//    buttonsPressed  = 0;
-//
-//    //Starting location of the Ball
-//    x = 80;
-//    y = 16;
-//
-//    halLcdClearScreen();
-//    halLcdImage(TI_BUG, 14, 106, 10, 0);
-//
-//    RTCExit64Hz = 1;
-//    RTCPS0CTL |= RT0PSIE;
-//    redrawCounter = 0;
-//    halAdcSetQuitFromISR(0);
-//
-//    while (!quit)
-//    {
-//        halAdcStartRead();
-//
-//        __bis_SR_register(LPM0_bits + GIE);
-//        __no_operation();
-//
-//        if (buttonsPressed & BUTTON_SELECT || buttonsPressed & BUTTON_S1)
-//            quit = 1;
-//
-//        halAccelerometerRead(&dx, &dy, &dz);
-//        dx >>= 5;
-//        dy >>= 5;
-//        if ((ABS(dx) > 2) || (ABS(dy) > 2))
-//        {
-//            halLcdCircle(x, y, 7, PIXEL_OFF);
-//            halLcdCircle(x, y, 6, PIXEL_OFF);
-//            halLcdCircle(x, y, 5, PIXEL_OFF);
-//            halLcdCircle(x, y, 4, PIXEL_OFF);
-//            halLcdCircle(x, y, 3, PIXEL_OFF);
-//            halLcdCircle(x, y, 2, PIXEL_OFF);
-//            halLcdCircle(x, y, 1, PIXEL_OFF);
-//            x -= dx;
-//            y += dy;
-//
-//            if (x < 0 || x >= LCD_COL)
-//                x += dx;
-//            if (y < 0 || y >= LCD_ROW)
-//                y -= dy;
-//
-//            halLcdCircle(x, y, 2, PIXEL_ON);
-//            halLcdCircle(x, y, 3, PIXEL_ON);
-//            halLcdCircle(x, y, 4, PIXEL_ON);
-//            halLcdCircle(x, y, 5, PIXEL_ON);
-//            halLcdCircle(x, y, 6, PIXEL_ON);
-//        }
-//        if (++redrawCounter == 320)             //Redraw canvas after ~5s
-//        {
-//            halLcdClearScreen();
-//            halLcdImage(TI_BUG, 14, 106, 10, 0);
-//            redrawCounter = 0;
-//            halLcdCircle(x, y, 2, PIXEL_ON);
-//            halLcdCircle(x, y, 3, PIXEL_ON);
-//            halLcdCircle(x, y, 4, PIXEL_ON);
-//            halLcdCircle(x, y, 5, PIXEL_ON);
-//            halLcdCircle(x, y, 6, PIXEL_ON);
-//        }
-//    }
-//
-//    RTCPS0CTL &= ~RT0PSIE;
-//    RTCExit64Hz = 0;
-//}
 
 
 
@@ -856,39 +676,35 @@ void halBoardInit(void)
   P2DIR &= ~(BIT6+BIT7); //pin 6+7 input
   P2REN = P2REN | (BIT6+BIT7); //pin 6+7 internal pull R enabled
   P2OUT = P2OUT | (BIT6+BIT7); //pin 6+7 pull-down
-//  P2IES |= (BIT6+BIT7); //switches interrupt edge is high to low
-//  P2IFG &= ~(BIT6+BIT7); //clear interrupt flags for the switches
-//  P2IE |= (BIT6+BIT7); //Interrupt enable for the switches
 
   //Now configure joystick UP/Down Left/Right Middle (P2.4+P2.5)(P2.1+P2.2)(P2.3) as input with pull-down (example)
   P2DIR &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 input
   P2REN = P2REN | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 internal pull R enabled
   P2OUT = P2OUT | (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 pull-down
-//  P2IES |= (BIT4+BIT5+BIT1+BIT2+BIT3); //pin 1 to 5 interrupt edge is high to low
-//  P2IFG &= ~(BIT4+BIT5+BIT1+BIT2+BIT3); //clear interrupt flags for the joystick
-//  P2IE |= (BIT4+BIT5+BIT1+BIT2+BIT3); //Interrupt enable for the joystick
 
    //Now configure LED1 and LED2 (P1.0+P1.1) as output
    P1DIR |= (BIT0+BIT1); //pin 1+2 output
 }
 
+
+//Accelerometer initialisation
+
 void halAccPortInit(void)
 {
     //Configure ACC Power port 6.0
-//    P6SEL |= BIT0; //GPIO function
     P6DIR |= BIT0; //Power pin output
     P6OUT |= BIT0; //ACC power - 6.0 out HIGH
 
     //Configure Accx, Accy, which are port 6.1, 6.2
     P6SEL |= (BIT1 + BIT2); //GPIO function
-    P6DIR &= ~(BIT1 + BIT2); //accx, accy as input
+    P6DIR &= ~(BIT1 + BIT2); //Accx, Accy as input
 
 
 
 
 }
 
-//Inits ADC12 to read battery voltage triggered from TB0.OUT3
+//Inits ADC12 to read accelerometer X and Y axis triggered from TB0.OUT3
 void halADCInit(void)
 {
     ADC12CTL0 &= ~ADC12ENC;                // Ensure ENC is clear
@@ -901,13 +717,10 @@ void halADCInit(void)
   ADC12MCTL0 = ADC12INCH_1;// ADC input ch A1 = ACCx
   ADC12MCTL1 = ADC12INCH_2 + ADC12EOS;// ADC input ch A2 = ACCy + EndOfSequence
 
-//  ADC12MCTL2 = ADC12SREF_1 + ADC12INCH_3 + ADC12EOS;// ADC input ch A3 = ACCz
 
   ADC12IE |= BIT1;                             //Enable ADC12MEM0IFG interrupt
 
-  /* Initialize the shared reference module */
-//  REFCTL0 |= REFMSTR + REFVSEL_1 + REFON;      // Configure internal 2.0V reference
-//  ADC12CTL0 |= ADC12ENC;                // Enable conversions to configure REF
+
 }
 
 //NOTE: TimerA0 is initialized inside hal_lcd.c because it's already used for the LCD backlight PWM

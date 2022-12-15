@@ -1,10 +1,10 @@
 ******************************************************************************
                   MSP430 Linker PC v16.9.4                     
 ******************************************************************************
->> Linked Fri Dec 02 22:38:59 2022
+>> Linked Thu Dec 15 10:51:19 2022
 
 OUTPUT FILE NAME:   <Pong_base.out>
-ENTRY POINT SYMBOL: "_c_int00_noargs_noexit"  address: 00005c6e
+ENTRY POINT SYMBOL: "_c_int00_noargs_noexit"  address: 00005c74
 
 
 MEMORY CONFIGURATION
@@ -18,8 +18,8 @@ MEMORY CONFIGURATION
   INFOC                 00001880   00000080  00000000  00000080  RWIX
   INFOB                 00001900   00000080  00000000  00000080  RWIX
   INFOA                 00001980   00000080  00000000  00000080  RWIX
-  RAM                   00001c00   00004000  00000ff0  00003010  RWIX
-  FLASH                 00005c00   0000a380  00001304  0000907c  RWIX
+  RAM                   00001c00   00004000  00000ffa  00003006  RWIX
+  FLASH                 00005c00   0000a380  000013d0  00008fb0  RWIX
   INT00                 0000ff80   00000002  00000000  00000002  RWIX
   INT01                 0000ff82   00000002  00000000  00000002  RWIX
   INT02                 0000ff84   00000002  00000000  00000002  RWIX
@@ -84,7 +84,7 @@ MEMORY CONFIGURATION
   INT61                 0000fffa   00000002  00000002  00000000  RWIX
   INT62                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FLASH2                00010000   00035c00  000016ba  00034546  RWIX
+  FLASH2                00010000   00035c00  00001c90  00033f70  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -92,70 +92,80 @@ SECTION ALLOCATION MAP
  output                                  attributes/
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
-.bss       0    00001c00    00000ec8     UNINITIALIZED
+.bss       0    00001c00    00000ed8     UNINITIALIZED
                   00001c00    00000e9c     (.common:LCD_MEM)
-                  00002a9c    00000004     (.common:temp_vcc)
-                  00002aa0    00000002     (.common:BallUpdatePending)
-                  00002aa2    00000002     (.common:InputChangePending)
-                  00002aa4    00000002     (.common:InputUpdatePending)
-                  00002aa6    00000002     (.common:LCDUpdatePending)
-                  00002aa8    00000002     (.common:active_menu_id)
-                  00002aaa    00000002     (.common:ballState)
-                  00002aac    00000002     (.common:p1_life_counter)
-                  00002aae    00000002     (.common:p2_life_counter)
-                  00002ab0    00000002     (.common:xBall)
-                  00002ab2    00000002     (.common:xBall_old)
-                  00002ab4    00000002     (.common:xBall_old2)
-                  00002ab6    00000002     (.common:xR1)
-                  00002ab8    00000002     (.common:xR2)
-                  00002aba    00000002     (.common:yBall)
-                  00002abc    00000002     (.common:yBall_old)
-                  00002abe    00000002     (.common:yBall_old2)
-                  00002ac0    00000002     (.common:yR1)
-                  00002ac2    00000002     (.common:yR1_old)
-                  00002ac4    00000002     (.common:yR2)
-                  00002ac6    00000002     (.common:yR2_old)
+                  00002a9c    00000002     (.common:BallUpdatePending)
+                  00002a9e    00000002     (.common:InputChangePending)
+                  00002aa0    00000002     (.common:InputUpdatePending)
+                  00002aa2    00000002     (.common:LCDUpdatePending)
+                  00002aa4    00000002     (.common:accdx)
+                  00002aa6    00000002     (.common:accdy)
+                  00002aa8    00000002     (.common:accx)
+                  00002aaa    00000002     (.common:accx_offset)
+                  00002aac    00000002     (.common:accy)
+                  00002aae    00000002     (.common:accy_offset)
+                  00002ab0    00000002     (.common:active_menu_id)
+                  00002ab2    00000002     (.common:ballState)
+                  00002ab4    00000002     (.common:ctrl_id)
+                  00002ab6    00000002     (.common:game_mode_id)
+                  00002ab8    00000002     (.common:p1_life_counter)
+                  00002aba    00000002     (.common:p2_life_counter)
+                  00002abc    00000002     (.common:xBall)
+                  00002abe    00000002     (.common:xBall_old)
+                  00002ac0    00000002     (.common:xBall_old2)
+                  00002ac2    00000002     (.common:xR1)
+                  00002ac4    00000002     (.common:xR1_old)
+                  00002ac6    00000002     (.common:xR2)
+                  00002ac8    00000002     (.common:xR2_old)
+                  00002aca    00000002     (.common:yBall)
+                  00002acc    00000002     (.common:yBall_old)
+                  00002ace    00000002     (.common:yBall_old2)
+                  00002ad0    00000002     (.common:yR1)
+                  00002ad2    00000002     (.common:yR1_old)
+                  00002ad4    00000002     (.common:yR2)
+                  00002ad6    00000002     (.common:yR2_old)
 
-.data      0    00002ac8    00000088     UNINITIALIZED
-                  00002ac8    0000006c     hal_lcd.obj (.data:LcdInitMacro)
-                  00002b34    00000006     hal_lcd.obj (.data:Draw_Block_Address_Macro)
-                  00002b3a    00000006     hal_lcd.obj (.data:Draw_Block_Value_Macro)
-                  00002b40    00000006     hal_lcd.obj (.data)
-                  00002b46    00000005     pong.obj (.data:LCD_string)
-                  00002b4b    00000001     --HOLE--
-                  00002b4c    00000004     pong.obj (.data)
+.data      0    00002ad8    00000082     UNINITIALIZED
+                  00002ad8    0000006c     hal_lcd.obj (.data:LcdInitMacro)
+                  00002b44    00000006     hal_lcd.obj (.data:Draw_Block_Address_Macro)
+                  00002b4a    00000006     hal_lcd.obj (.data:Draw_Block_Value_Macro)
+                  00002b50    00000006     hal_lcd.obj (.data)
+                  00002b56    00000004     pong.obj (.data)
 
 .stack     0    00005b60    000000a0     UNINITIALIZED
                   00005b60    00000004     rts430x_lc_rd_eabi.lib : boot.obj (.stack)
                   00005b64    0000009c     --HOLE--
 
 .text:_isr 
-*          0    00005c00    000000a2     
+*          0    00005c00    000000a4     
                   00005c00    00000046     pong.obj (.text:_isr:TIMER1_A0_ISR)
-                  00005c46    00000028     pong.obj (.text:_isr:ADC12ISR)
-                  00005c6e    0000001a     rts430x_lc_rd_eabi.lib : boot_special.obj (.text:_isr:_c_int00_noargs_noexit)
-                  00005c88    00000012     pong.obj (.text:_isr:TIMER0_B1_ISR)
-                  00005c9a    00000008     rts430x_lc_rd_eabi.lib : isr_trap.obj (.text:_isr:__TI_ISR_TRAP)
+                  00005c46    0000002e     pong.obj (.text:_isr:ADC12ISR)
+                  00005c74    0000001a     rts430x_lc_rd_eabi.lib : boot_special.obj (.text:_isr:_c_int00_noargs_noexit)
+                  00005c8e    0000000e     pong.obj (.text:_isr:TIMER0_B1_ISR)
+                  00005c9c    00000008     rts430x_lc_rd_eabi.lib : isr_trap.obj (.text:_isr:__TI_ISR_TRAP)
 
-.cinit     0    00006e6a    0000009a     
-                  00006e6a    00000077     (.cinit..data.load) [load image, compression = lzss]
-                  00006ee1    00000001     --HOLE-- [fill = 0]
-                  00006ee2    0000000c     (__TI_handler_table)
-                  00006eee    00000006     (.cinit..bss.load) [load image, compression = zero_init]
-                  00006ef4    00000010     (__TI_cinit_table)
+.cinit     0    00006f3e    00000092     
+                  00006f3e    00000070     (.cinit..data.load) [load image, compression = lzss]
+                  00006fae    0000000c     (__TI_handler_table)
+                  00006fba    00000006     (.cinit..bss.load) [load image, compression = zero_init]
+                  00006fc0    00000010     (__TI_cinit_table)
 
 .binit     0    00005c00    00000000     
 
 .init_array 
 *          0    00005c00    00000000     UNINITIALIZED
 
-.const     0    00005ca2    000011c8     
-                  00005ca2    00000854     hal_lcd_fonts.obj (.const:GrayScale_fonts)
-                  000064f6    00000854     hal_lcd_fonts.obj (.const:fonts)
-                  00006d4a    00000089     hal_lcd_fonts.obj (.const:.string:fonts_lookup)
-                  00006dd3    00000001     --HOLE-- [fill = 0]
-                  00006dd4    0000004e     ball_movement.obj (.const:.string)
-                  00006e22    00000048     gamemenu.obj (.const:.string)
+.const     0    00005ca4    0000129a     
+                  00005ca4    00000854     hal_lcd_fonts.obj (.const:GrayScale_fonts)
+                  000064f8    00000854     hal_lcd_fonts.obj (.const:fonts)
+                  00006d4c    000000be     gamemenu.obj (.const:.string)
+                  00006e0a    00000089     hal_lcd_fonts.obj (.const:.string:fonts_lookup)
+                  00006e93    00000001     --HOLE-- [fill = 0]
+                  00006e94    00000062     ball_movement.obj (.const:.string)
+                  00006ef6    00000012     informationboard.obj (.const:empty_heart_symbol)
+                  00006f08    00000012     informationboard.obj (.const:empty_heart_symbol_up)
+                  00006f1a    00000012     informationboard.obj (.const:heart_symbol)
+                  00006f2c    00000012     informationboard.obj (.const:heart_symbol_up)
 
 RTC        0    0000ffd2    00000002     
                   0000ffd2    00000002     rts430x_lc_rd_eabi.lib : int41.obj (.int41)
@@ -232,90 +242,95 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.obj (.reset)
 
-.text      0    00010000    000016ba     
-                  00010000    000005de     ball_movement.obj (.text:ball_update)
-                  000105de    0000017e     hal_lcd.obj (.text:halLcdPrint)
-                  0001075c    00000178     pong.obj (.text:LCD_update)
-                  000108d4    0000011c     hal_lcd.obj (.text:halLcdCircle)
-                  000109f0    000000d4     pong.obj (.text:GameStartInit)
-                  00010ac4    000000c4     hal_lcd.obj (.text:halLcdClearScreen)
-                  00010b88    000000a2     gamemenu.obj (.text:ActiveMenuDraw)
-                  00010c2a    0000009a     gamemenu.obj (.text:OldMenuClear)
-                  00010cc4    00000098     hal_lcd.obj (.text:halLcdInit)
-                  00010d5c    00000092     pong.obj (.text:halBoardInit)
-                  00010dee    00000092     pong.obj (.text:main)
-                  00010e80    00000086     gamemenu.obj (.text:GameMenuInit)
-                  00010f06    00000082     rts430x_lc_rd_eabi.lib : autoinit_wdt.obj (.text:_auto_init_hold_wdt)
-                  00010f88    00000078                            : copy_decompress_lzss.obj (.text:decompress:lzss:__TI_decompress_lzss)
-                  00011000    0000006c     hal_lcd.obj (.text:halLcdDrawCurrentBlock)
-                  0001106c    00000068     hal_lcd.obj (.text:halLcdPixel)
-                  000110d4    00000066     rts430x_lc_rd_eabi.lib : cpy_tbl.obj (.text:copy_in)
-                  0001113a    00000062     pong.obj (.text:UserInputs_update)
-                  0001119c    0000005a     informationboard.obj (.text:clear_life)
-                  000111f6    00000050     informationboard.obj (.text:generate_life_score)
-                  00011246    00000048     hal_lcd.obj (.text:halLcdSendCommand)
-                  0001128e    00000046     hal_lcd.obj (.text:halLcdSetBackLight)
-                  000112d4    0000003e     rts430x_lc_rd_eabi.lib : lsr32.obj (.text:l_lsr_const)
-                  00011312    00000034     hal_lcd.obj (.text:halLcdActive)
-                  00011346    00000034     hal_lcd.obj (.text:halLcdSetAddress)
-                  0001137a    0000002e     informationboard.obj (.text:draw_life)
-                  000113a8    0000002e     hal_lcd.obj (.text:halLcdBackLightInit)
-                  000113d6    0000002c     hal_lcd.obj (.text:halLcdHLine)
-                  00011402    0000002c     hal_lcd.obj (.text:halLcdVLine)
-                  0001142e    00000028     hal_UCS.obj (.text:LFXT_Start)
-                  00011456    00000026     pong.obj (.text:format_voltage_string)
-                  0001147c    00000024     ball_movement.obj (.text:P1_racket_hit)
-                  000114a0    00000024     ball_movement.obj (.text:P2_racket_hit)
-                  000114c4    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
-                  000114e8    00000024     hal_lcd.obj (.text:halLcdPrintLine)
-                  0001150c    00000024     rts430x_lc_rd_eabi.lib : mult32_f5hw.obj (.text)
-                  00011530    00000022     pong.obj (.text:halADCInit)
-                  00011552    00000022     hal_lcd.obj (.text:halLcdSetContrast)
-                  00011574    00000020     informationboard.obj (.text:information_board_draw)
-                  00011594    0000001e     pong.obj (.text:LCDInit)
-                  000115b2    0000001a     pong.obj (.text:TimerB0Init)
-                  000115cc    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
-                  000115e4    00000016     ball_movement.obj (.text:bottom_wall_reached)
-                  000115fa    00000016     ball_movement.obj (.text:right_wall_reached)
-                  00011610    00000016     ball_movement.obj (.text:top_wall_reached)
-                  00011626    00000014     pong.obj (.text:TimerA1Init)
-                  0001163a    00000014     informationboard.obj (.text:check_player1_score)
-                  0001164e    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
-                  00011662    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
-                  00011674    00000012     ball_movement.obj (.text:left_wall_reached)
-                  00011686    00000010     informationboard.obj (.text:check_player2_score)
-                  00011696    0000000e     hal_lcd.obj (.text:halLcdDrawBlock)
-                  000116a4    0000000a     rts430x_lc_rd_eabi.lib : lsl16.obj (.text)
-                  000116ae    00000006                            : exit.obj (.text:abort)
-                  000116b4    00000004                            : pre_init.obj (.text:_system_pre_init)
-                  000116b8    00000002                            : startup.obj (.text:_system_post_cinit)
+.text      0    00010000    00001c90     
+                  00010000    000006f6     ball_movement.obj (.text:ball_update)
+                  000106f6    0000040a     pong.obj (.text:main)
+                  00010b00    0000017e     hal_lcd.obj (.text:halLcdPrint)
+                  00010c7e    0000011a     pong.obj (.text:LCD_update)
+                  00010d98    00000100     pong.obj (.text:GameStartInit)
+                  00010e98    000000fc     gamemenu.obj (.text:GameMenuInit)
+                  00010f94    000000c4     hal_lcd.obj (.text:halLcdClearScreen)
+                  00011058    000000a6     pong.obj (.text:halBoardInit)
+                  000110fe    000000a2     gamemenu.obj (.text:ActiveMenuDraw)
+                  000111a0    0000009a     gamemenu.obj (.text:OldMenuClear)
+                  0001123a    00000098     hal_lcd.obj (.text:halLcdInit)
+                  000112d2    00000094     hal_lcd.obj (.text:halLcdDrawCurrentLine)
+                  00011366    00000082     rts430x_lc_rd_eabi.lib : autoinit_wdt.obj (.text:_auto_init_hold_wdt)
+                  000113e8    00000078                            : copy_decompress_lzss.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  00011460    0000006c     hal_lcd.obj (.text:halLcdDrawCurrentBlock)
+                  000114cc    0000006a     informationboard.obj (.text:generate_life_score)
+                  00011536    00000068     hal_lcd.obj (.text:halLcdPixel)
+                  0001159e    00000066     rts430x_lc_rd_eabi.lib : cpy_tbl.obj (.text:copy_in)
+                  00011604    0000004a     pong.obj (.text:DrawBall)
+                  0001164e    00000048     hal_lcd.obj (.text:halLcdSendCommand)
+                  00011696    00000046     hal_lcd.obj (.text:halLcdImage)
+                  000116dc    00000046     hal_lcd.obj (.text:halLcdSetBackLight)
+                  00011722    00000042     gamemenu.obj (.text:PrintCTRLSel)
+                  00011764    00000042     gamemenu.obj (.text:PrintGameMode)
+                  000117a6    00000042     gamemenu.obj (.text:PrintMainMenu)
+                  000117e8    00000040     pong.obj (.text:ClearBall)
+                  00011828    00000040     pong.obj (.text:DrawBallTrail)
+                  00011868    00000036     informationboard.obj (.text:clear_player1_score)
+                  0001189e    00000034     hal_lcd.obj (.text:halLcdActive)
+                  000118d2    00000034     hal_lcd.obj (.text:halLcdSetAddress)
+                  00011906    00000034     informationboard.obj (.text:information_board_draw)
+                  0001193a    00000032     informationboard.obj (.text:clear_life)
+                  0001196c    00000032     informationboard.obj (.text:draw_life)
+                  0001199e    0000002e     hal_lcd.obj (.text:halLcdBackLightInit)
+                  000119cc    0000002c     hal_lcd.obj (.text:halLcdHLine)
+                  000119f8    0000002c     hal_lcd.obj (.text:halLcdVLine)
+                  00011a24    00000028     hal_UCS.obj (.text:LFXT_Start)
+                  00011a4c    00000026     gamemenu.obj (.text:MenuSelection)
+                  00011a72    00000026     pong.obj (.text:halADCInit)
+                  00011a98    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
+                  00011abc    00000024     hal_lcd.obj (.text:halLcdPrintLine)
+                  00011ae0    00000022     ball_movement.obj (.text:P1_racket_hit)
+                  00011b02    00000022     ball_movement.obj (.text:P2_racket_hit)
+                  00011b24    00000022     hal_lcd.obj (.text:halLcdSetContrast)
+                  00011b46    0000001e     pong.obj (.text:LCDInit)
+                  00011b64    0000001a     pong.obj (.text:TimerB0Init)
+                  00011b7e    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
+                  00011b96    00000016     ball_movement.obj (.text:bottom_wall_reached)
+                  00011bac    00000016     informationboard.obj (.text:clear_player2_score)
+                  00011bc2    00000016     pong.obj (.text:halAccPortInit)
+                  00011bd8    00000016     ball_movement.obj (.text:left_wall_reached)
+                  00011bee    00000016     ball_movement.obj (.text:right_wall_reached)
+                  00011c04    00000014     pong.obj (.text:TimerA1Init)
+                  00011c18    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
+                  00011c2c    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
+                  00011c3e    00000012     ball_movement.obj (.text:top_wall_reached)
+                  00011c50    0000000e     pong.obj (.text:ReadAccX)
+                  00011c5e    0000000e     pong.obj (.text:ReadAccY)
+                  00011c6c    0000000e     hal_lcd.obj (.text:halLcdDrawBlock)
+                  00011c7a    0000000a     rts430x_lc_rd_eabi.lib : lsl16.obj (.text)
+                  00011c84    00000006                            : exit.obj (.text:abort)
+                  00011c8a    00000004                            : pre_init.obj (.text:_system_pre_init)
+                  00011c8e    00000002                            : startup.obj (.text:_system_post_cinit)
 
 MODULE SUMMARY
 
        Module                     code   ro data   rw data
        ------                     ----   -------   -------
     .\
-       ball_movement.obj          1658   78        40     
-       pong.obj                   1254   6         13     
-       gamemenu.obj               450    72        0      
-       informationboard.obj       284    0         0      
+       pong.obj                   2234   6         4      
+       ball_movement.obj          1934   98        60     
+       gamemenu.obj               804    190       0      
+       informationboard.obj       334    72        0      
     +--+--------------------------+------+---------+---------+
-       Total:                     3646   156       53     
+       Total:                     5306   366       64     
                                                           
     .\hal_libraries\
-       hal_lcd.obj                1690   0         3866   
+       hal_lcd.obj                1624   0         3866   
        hal_lcd_fonts.obj          0      4401      0      
        hal_UCS.obj                40     0         0      
     +--+--------------------------+------+---------+---------+
-       Total:                     1730   4401      3866   
+       Total:                     1664   4401      3866   
                                                           
-    C:\Users\Sejbi\Desktop\TI\ccsv7\tools\compiler\ti-cgt-msp430_16.9.4.LTS\lib\rts430x_lc_rd_eabi.lib
+    C:\Apps\TI\ccsv7\tools\compiler\ti-cgt-msp430_16.9.4.LTS\lib\rts430x_lc_rd_eabi.lib
        autoinit_wdt.obj           130    0         0      
        copy_decompress_lzss.obj   120    0         0      
        cpy_tbl.obj                102    0         0      
-       lsr32.obj                  62     0         0      
        copy_zero_init.obj         36     0         0      
-       mult32_f5hw.obj            36     0         0      
        boot_special.obj           26     0         0      
        mult16_f5hw.obj            24     0         0      
        memcpy.obj                 20     0         0      
@@ -346,24 +361,24 @@ MODULE SUMMARY
        int62.obj                  0      2         0      
        startup.obj                2      0         0      
     +--+--------------------------+------+---------+---------+
-       Total:                     604    40        0      
+       Total:                     506    40        0      
                                                           
        Stack:                     0      0         160    
-       Linker Generated:          0      153       0      
+       Linker Generated:          0      146       0      
     +--+--------------------------+------+---------+---------+
-       Grand Total:               5980   4750      4079   
+       Grand Total:               7476   4953      4090   
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00006ef4 records: 2, size/record: 8, table size: 16
-	.data: load addr=00006e6a, load size=00000077 bytes, run addr=00002ac8, run size=00000088 bytes, compression=lzss
-	.bss: load addr=00006eee, load size=00000006 bytes, run addr=00001c00, run size=00000ec8 bytes, compression=zero_init
+__TI_cinit_table @ 00006fc0 records: 2, size/record: 8, table size: 16
+	.data: load addr=00006f3e, load size=00000070 bytes, run addr=00002ad8, run size=00000082 bytes, compression=lzss
+	.bss: load addr=00006fba, load size=00000006 bytes, run addr=00001c00, run size=00000ed8 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00006ee2 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 00006fae records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_lzss
 	index: 2, handler: __TI_decompress_none
@@ -456,10 +471,10 @@ address   name
 00000732  ADC12MEM9               
 00000733  ADC12MEM9_H             
 00000732  ADC12MEM9_L             
-00010b88  ActiveMenuDraw          
-00002aa0  BallUpdatePending       
-00002b4e  Ball_intervals          
-000116ae  C$$EXIT                 
+000110fe  ActiveMenuDraw          
+00002a9c  BallUpdatePending       
+00002b58  Ball_intervals          
+00011c84  C$$EXIT                 
 00000150  CRCDI                   
 00000152  CRCDIRB                 
 00000153  CRCDIRB_H               
@@ -472,6 +487,7 @@ address   name
 00000156  CRCRESR                 
 00000157  CRCRESR_H               
 00000156  CRCRESR_L               
+000117e8  ClearBall               
 00000510  DMA0CTL                 
 00000511  DMA0CTL_H               
 00000510  DMA0CTL_L               
@@ -520,8 +536,10 @@ address   name
 0000050e  DMAIV                   
 0000050f  DMAIV_H                 
 0000050e  DMAIV_L                 
-00002b34  Draw_Block_Address_Macro
-00002b3a  Draw_Block_Value_Macro  
+00011604  DrawBall                
+00011828  DrawBallTrail           
+00002b44  Draw_Block_Address_Macro
+00002b4a  Draw_Block_Value_Macro  
 00000140  FCTL1                   
 00000141  FCTL1_H                 
 00000140  FCTL1_L                 
@@ -531,21 +549,20 @@ address   name
 00000146  FCTL4                   
 00000147  FCTL4_H                 
 00000146  FCTL4_L                 
-00010e80  GameMenuInit            
-000109f0  GameStartInit           
-00005ca2  GrayScale_fonts         
-00002aa2  InputChangePending      
-00002aa4  InputUpdatePending      
-00011594  LCDInit                 
-00002aa6  LCDUpdatePending        
+00010e98  GameMenuInit            
+00010d98  GameStartInit           
+00005ca4  GrayScale_fonts         
+00002a9e  InputChangePending      
+00002aa0  InputUpdatePending      
+00011b46  LCDInit                 
+00002aa2  LCDUpdatePending        
 00001c00  LCD_MEM                 
-00002b4c  LCD_intervals           
-00002b46  LCD_string              
-0001075c  LCD_update              
-0001142e  LFXT_Start              
-00002b40  LcdAddress              
-00002ac8  LcdInitMacro            
-00002b42  LcdTableAddress         
+00002b56  LCD_intervals           
+00010c7e  LCD_update              
+00011a24  LFXT_Start              
+00002b50  LcdAddress              
+00002ad8  LcdInitMacro            
+00002b52  LcdTableAddress         
 000004c4  MAC                     
 000004da  MAC32H                  
 000004db  MAC32H_H                
@@ -585,6 +602,7 @@ address   name
 000004c2  MPYS_L                  
 000004c1  MPY_H                   
 000004c0  MPY_L                   
+00011a4c  MenuSelection           
 000004c8  OP2                     
 000004e2  OP2H                    
 000004e3  OP2H_H                  
@@ -594,11 +612,11 @@ address   name
 000004e0  OP2L_L                  
 000004c9  OP2_H                   
 000004c8  OP2_L                   
-00010c2a  OldMenuClear            
+000111a0  OldMenuClear            
 0000020e  P1IV                    
-0001147c  P1_racket_hit           
+00011ae0  P1_racket_hit           
 0000021e  P2IV                    
-000114a0  P2_racket_hit           
+00011b02  P2_racket_hit           
 00000204  PADIR                   
 00000205  PADIR_H                 
 00000204  PADIR_L                 
@@ -746,6 +764,9 @@ address   name
 0000012e  PMMRIE                  
 0000012f  PMMRIE_H                
 0000012e  PMMRIE_L                
+00011722  PrintCTRLSel            
+00011764  PrintGameMode           
+000117a6  PrintMainMenu           
 00000158  RCCTL0                  
 00000159  RCCTL0_H                
 00000158  RCCTL0_L                
@@ -804,6 +825,8 @@ address   name
 000004b6  RTCYEAR                 
 000004b7  RTCYEAR_H               
 000004b6  RTCYEAR_L               
+00011c50  ReadAccX                
+00011c5e  ReadAccY                
 00000100  SFRIE1                  
 00000101  SFRIE1_H                
 00000100  SFRIE1_L                
@@ -900,10 +923,10 @@ address   name
 000003e0  TB0EX0                  
 000003ee  TB0IV                   
 000003d0  TB0R                    
-00005c88  TIMER0_B1_ISR           
+00005c8e  TIMER0_B1_ISR           
 00005c00  TIMER1_A0_ISR           
-00011626  TimerA1Init             
-000115b2  TimerB0Init             
+00011c04  TimerA1Init             
+00011b64  TimerB0Init             
 000005d0  UCA0ABCTL               
 000005c6  UCA0BRW                 
 000005c7  UCA0BRW_H               
@@ -1079,7 +1102,6 @@ address   name
 00000170  UCSCTL8                 
 00000171  UCSCTL8_H               
 00000170  UCSCTL8_L               
-0001113a  UserInputs_update       
 0000015c  WDTCTL                  
 0000015d  WDTCTL_H                
 0000015c  WDTCTL_L                
@@ -1087,15 +1109,15 @@ address   name
 000000a0  __STACK_SIZE            
 UNDEFED   __TI_BINIT_Base         
 UNDEFED   __TI_BINIT_Limit        
-00006ef4  __TI_CINIT_Base         
-00006f04  __TI_CINIT_Limit        
-00006ee2  __TI_Handler_Table_Base 
-00006eee  __TI_Handler_Table_Limit
+00006fc0  __TI_CINIT_Base         
+00006fd0  __TI_CINIT_Limit        
+00006fae  __TI_Handler_Table_Base 
+00006fba  __TI_Handler_Table_Limit
 UNDEFED   __TI_INITARRAY_Base     
 UNDEFED   __TI_INITARRAY_Limit    
-00005c9a  __TI_ISR_TRAP           
-00010f88  __TI_decompress_lzss    
-00011662  __TI_decompress_none    
+00005c9c  __TI_ISR_TRAP           
+000113e8  __TI_decompress_lzss    
+00011c2c  __TI_decompress_none    
 0000ffd2  __TI_int41              
 0000ffd4  __TI_int42              
 0000ffd6  __TI_int43              
@@ -1121,87 +1143,85 @@ UNDEFED   __TI_INITARRAY_Limit
 ffffffff  __TI_pprof_out_hndl     
 ffffffff  __TI_prof_data_size     
 ffffffff  __TI_prof_data_start    
-000114c4  __TI_zero_init          
+00011a98  __TI_zero_init          
 ffffffff  __c_args__              
-000115cc  __mspabi_mpyi_f5hw      
-0001150c  __mspabi_mpyl_f5hw      
-000116a4  __mspabi_slli           
-0001130c  __mspabi_srll_1         
-000112e8  __mspabi_srll_10        
-000112e4  __mspabi_srll_11        
-000112e0  __mspabi_srll_12        
-000112dc  __mspabi_srll_13        
-000112d8  __mspabi_srll_14        
-000112d4  __mspabi_srll_15        
-00011308  __mspabi_srll_2         
-00011304  __mspabi_srll_3         
-00011300  __mspabi_srll_4         
-000112fc  __mspabi_srll_5         
-000112f8  __mspabi_srll_6         
-000112f4  __mspabi_srll_7         
-000112f0  __mspabi_srll_8         
-000112ec  __mspabi_srll_9         
-00010f06  _auto_init_hold_wdt     
-00005c6e  _c_int00_noargs_noexit  
+00011b7e  __mspabi_mpyi_f5hw      
+00011c7a  __mspabi_slli           
+00011366  _auto_init_hold_wdt     
+00005c74  _c_int00_noargs_noexit  
 0000fffe  _reset_vector           
 00005b60  _stack                  
-000116b8  _system_post_cinit      
-000116b4  _system_pre_init        
-000116ae  abort                   
-00002aa8  active_menu_id          
-00002b45  backlight               
-00002aaa  ballState               
+00011c8e  _system_post_cinit      
+00011c8a  _system_pre_init        
+00011c84  abort                   
+00002aa4  accdx                   
+00002aa6  accdy                   
+00002aa8  accx                    
+00002aaa  accx_offset             
+00002aac  accy                    
+00002aae  accy_offset             
+00002ab0  active_menu_id          
+00002b55  backlight               
+00002ab2  ballState               
 00010000  ball_update             
-000115e4  bottom_wall_reached     
-0001163a  check_player1_score     
-00011686  check_player2_score     
-0001119c  clear_life              
-00002b44  contrast                
-000110d4  copy_in                 
-0001137a  draw_life               
-000064f6  fonts                   
-00006d4a  fonts_lookup            
-00011456  format_voltage_string   
-000111f6  generate_life_score     
-00011530  halADCInit              
-00010d5c  halBoardInit            
-00011312  halLcdActive            
-000113a8  halLcdBackLightInit     
-000108d4  halLcdCircle            
-00010ac4  halLcdClearScreen       
-00011696  halLcdDrawBlock         
-00011000  halLcdDrawCurrentBlock  
-000113d6  halLcdHLine             
-00010cc4  halLcdInit              
-0001106c  halLcdPixel             
-000105de  halLcdPrint             
-000114e8  halLcdPrintLine         
-00011246  halLcdSendCommand       
-00011346  halLcdSetAddress        
-0001128e  halLcdSetBackLight      
-00011552  halLcdSetContrast       
-00011402  halLcdVLine             
-00011574  information_board_draw  
-00011674  left_wall_reached       
-00010dee  main                    
-0001164e  memcpy                  
-00002aac  p1_life_counter         
-00002aae  p2_life_counter         
-000115fa  right_wall_reached      
-00002a9c  temp_vcc                
-00011610  top_wall_reached        
-00002ab0  xBall                   
-00002ab2  xBall_old               
-00002ab4  xBall_old2              
-00002ab6  xR1                     
-00002ab8  xR2                     
-00002aba  yBall                   
-00002abc  yBall_old               
-00002abe  yBall_old2              
-00002ac0  yR1                     
-00002ac2  yR1_old                 
-00002ac4  yR2                     
-00002ac6  yR2_old                 
+00011b96  bottom_wall_reached     
+0001193a  clear_life              
+00011868  clear_player1_score     
+00011bac  clear_player2_score     
+00002b54  contrast                
+0001159e  copy_in                 
+00002ab4  ctrl_id                 
+0001196c  draw_life               
+00006ef6  empty_heart_symbol      
+00006f08  empty_heart_symbol_up   
+000064f8  fonts                   
+00006e0a  fonts_lookup            
+00002ab6  game_mode_id            
+000114cc  generate_life_score     
+00011a72  halADCInit              
+00011bc2  halAccPortInit          
+00011058  halBoardInit            
+0001189e  halLcdActive            
+0001199e  halLcdBackLightInit     
+00010f94  halLcdClearScreen       
+00011c6c  halLcdDrawBlock         
+00011460  halLcdDrawCurrentBlock  
+000112d2  halLcdDrawCurrentLine   
+000119cc  halLcdHLine             
+00011696  halLcdImage             
+0001123a  halLcdInit              
+00011536  halLcdPixel             
+00010b00  halLcdPrint             
+00011abc  halLcdPrintLine         
+0001164e  halLcdSendCommand       
+000118d2  halLcdSetAddress        
+000116dc  halLcdSetBackLight      
+00011b24  halLcdSetContrast       
+000119f8  halLcdVLine             
+00006f1a  heart_symbol            
+00006f2c  heart_symbol_up         
+00011906  information_board_draw  
+00011bd8  left_wall_reached       
+000106f6  main                    
+00011c18  memcpy                  
+00002ab8  p1_life_counter         
+00002aba  p2_life_counter         
+00011bee  right_wall_reached      
+00011c3e  top_wall_reached        
+00002abc  xBall                   
+00002abe  xBall_old               
+00002ac0  xBall_old2              
+00002ac2  xR1                     
+00002ac4  xR1_old                 
+00002ac6  xR2                     
+00002ac8  xR2_old                 
+00002aca  yBall                   
+00002acc  yBall_old               
+00002ace  yBall_old2              
+00002ad0  yR1                     
+00002ad2  yR1_old                 
+00002ad4  yR2                     
+00002ad6  yR2_old                 
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -1890,51 +1910,63 @@ address   name
 0000073e  ADC12MEM15_L            
 0000073f  ADC12MEM15_H            
 00001c00  LCD_MEM                 
-00002a9c  temp_vcc                
-00002aa0  BallUpdatePending       
-00002aa2  InputChangePending      
-00002aa4  InputUpdatePending      
-00002aa6  LCDUpdatePending        
-00002aa8  active_menu_id          
-00002aaa  ballState               
-00002aac  p1_life_counter         
-00002aae  p2_life_counter         
-00002ab0  xBall                   
-00002ab2  xBall_old               
-00002ab4  xBall_old2              
-00002ab6  xR1                     
-00002ab8  xR2                     
-00002aba  yBall                   
-00002abc  yBall_old               
-00002abe  yBall_old2              
-00002ac0  yR1                     
-00002ac2  yR1_old                 
-00002ac4  yR2                     
-00002ac6  yR2_old                 
-00002ac8  LcdInitMacro            
-00002b34  Draw_Block_Address_Macro
-00002b3a  Draw_Block_Value_Macro  
-00002b40  LcdAddress              
-00002b42  LcdTableAddress         
-00002b44  contrast                
-00002b45  backlight               
-00002b46  LCD_string              
-00002b4c  LCD_intervals           
-00002b4e  Ball_intervals          
+00002a9c  BallUpdatePending       
+00002a9e  InputChangePending      
+00002aa0  InputUpdatePending      
+00002aa2  LCDUpdatePending        
+00002aa4  accdx                   
+00002aa6  accdy                   
+00002aa8  accx                    
+00002aaa  accx_offset             
+00002aac  accy                    
+00002aae  accy_offset             
+00002ab0  active_menu_id          
+00002ab2  ballState               
+00002ab4  ctrl_id                 
+00002ab6  game_mode_id            
+00002ab8  p1_life_counter         
+00002aba  p2_life_counter         
+00002abc  xBall                   
+00002abe  xBall_old               
+00002ac0  xBall_old2              
+00002ac2  xR1                     
+00002ac4  xR1_old                 
+00002ac6  xR2                     
+00002ac8  xR2_old                 
+00002aca  yBall                   
+00002acc  yBall_old               
+00002ace  yBall_old2              
+00002ad0  yR1                     
+00002ad2  yR1_old                 
+00002ad4  yR2                     
+00002ad6  yR2_old                 
+00002ad8  LcdInitMacro            
+00002b44  Draw_Block_Address_Macro
+00002b4a  Draw_Block_Value_Macro  
+00002b50  LcdAddress              
+00002b52  LcdTableAddress         
+00002b54  contrast                
+00002b55  backlight               
+00002b56  LCD_intervals           
+00002b58  Ball_intervals          
 00005b60  _stack                  
 00005c00  TIMER1_A0_ISR           
 00005c00  __STACK_END             
 00005c46  ADC12ISR                
-00005c6e  _c_int00_noargs_noexit  
-00005c88  TIMER0_B1_ISR           
-00005c9a  __TI_ISR_TRAP           
-00005ca2  GrayScale_fonts         
-000064f6  fonts                   
-00006d4a  fonts_lookup            
-00006ee2  __TI_Handler_Table_Base 
-00006eee  __TI_Handler_Table_Limit
-00006ef4  __TI_CINIT_Base         
-00006f04  __TI_CINIT_Limit        
+00005c74  _c_int00_noargs_noexit  
+00005c8e  TIMER0_B1_ISR           
+00005c9c  __TI_ISR_TRAP           
+00005ca4  GrayScale_fonts         
+000064f8  fonts                   
+00006e0a  fonts_lookup            
+00006ef6  empty_heart_symbol      
+00006f08  empty_heart_symbol_up   
+00006f1a  heart_symbol            
+00006f2c  heart_symbol_up         
+00006fae  __TI_Handler_Table_Base 
+00006fba  __TI_Handler_Table_Limit
+00006fc0  __TI_CINIT_Base         
+00006fd0  __TI_CINIT_Limit        
 0000ffd2  __TI_int41              
 0000ffd4  __TI_int42              
 0000ffd6  __TI_int43              
@@ -1959,76 +1991,69 @@ address   name
 0000fffc  __TI_int62              
 0000fffe  _reset_vector           
 00010000  ball_update             
-000105de  halLcdPrint             
-0001075c  LCD_update              
-000108d4  halLcdCircle            
-000109f0  GameStartInit           
-00010ac4  halLcdClearScreen       
-00010b88  ActiveMenuDraw          
-00010c2a  OldMenuClear            
-00010cc4  halLcdInit              
-00010d5c  halBoardInit            
-00010dee  main                    
-00010e80  GameMenuInit            
-00010f06  _auto_init_hold_wdt     
-00010f88  __TI_decompress_lzss    
-00011000  halLcdDrawCurrentBlock  
-0001106c  halLcdPixel             
-000110d4  copy_in                 
-0001113a  UserInputs_update       
-0001119c  clear_life              
-000111f6  generate_life_score     
-00011246  halLcdSendCommand       
-0001128e  halLcdSetBackLight      
-000112d4  __mspabi_srll_15        
-000112d8  __mspabi_srll_14        
-000112dc  __mspabi_srll_13        
-000112e0  __mspabi_srll_12        
-000112e4  __mspabi_srll_11        
-000112e8  __mspabi_srll_10        
-000112ec  __mspabi_srll_9         
-000112f0  __mspabi_srll_8         
-000112f4  __mspabi_srll_7         
-000112f8  __mspabi_srll_6         
-000112fc  __mspabi_srll_5         
-00011300  __mspabi_srll_4         
-00011304  __mspabi_srll_3         
-00011308  __mspabi_srll_2         
-0001130c  __mspabi_srll_1         
-00011312  halLcdActive            
-00011346  halLcdSetAddress        
-0001137a  draw_life               
-000113a8  halLcdBackLightInit     
-000113d6  halLcdHLine             
-00011402  halLcdVLine             
-0001142e  LFXT_Start              
-00011456  format_voltage_string   
-0001147c  P1_racket_hit           
-000114a0  P2_racket_hit           
-000114c4  __TI_zero_init          
-000114e8  halLcdPrintLine         
-0001150c  __mspabi_mpyl_f5hw      
-00011530  halADCInit              
-00011552  halLcdSetContrast       
-00011574  information_board_draw  
-00011594  LCDInit                 
-000115b2  TimerB0Init             
-000115cc  __mspabi_mpyi_f5hw      
-000115e4  bottom_wall_reached     
-000115fa  right_wall_reached      
-00011610  top_wall_reached        
-00011626  TimerA1Init             
-0001163a  check_player1_score     
-0001164e  memcpy                  
-00011662  __TI_decompress_none    
-00011674  left_wall_reached       
-00011686  check_player2_score     
-00011696  halLcdDrawBlock         
-000116a4  __mspabi_slli           
-000116ae  C$$EXIT                 
-000116ae  abort                   
-000116b4  _system_pre_init        
-000116b8  _system_post_cinit      
+000106f6  main                    
+00010b00  halLcdPrint             
+00010c7e  LCD_update              
+00010d98  GameStartInit           
+00010e98  GameMenuInit            
+00010f94  halLcdClearScreen       
+00011058  halBoardInit            
+000110fe  ActiveMenuDraw          
+000111a0  OldMenuClear            
+0001123a  halLcdInit              
+000112d2  halLcdDrawCurrentLine   
+00011366  _auto_init_hold_wdt     
+000113e8  __TI_decompress_lzss    
+00011460  halLcdDrawCurrentBlock  
+000114cc  generate_life_score     
+00011536  halLcdPixel             
+0001159e  copy_in                 
+00011604  DrawBall                
+0001164e  halLcdSendCommand       
+00011696  halLcdImage             
+000116dc  halLcdSetBackLight      
+00011722  PrintCTRLSel            
+00011764  PrintGameMode           
+000117a6  PrintMainMenu           
+000117e8  ClearBall               
+00011828  DrawBallTrail           
+00011868  clear_player1_score     
+0001189e  halLcdActive            
+000118d2  halLcdSetAddress        
+00011906  information_board_draw  
+0001193a  clear_life              
+0001196c  draw_life               
+0001199e  halLcdBackLightInit     
+000119cc  halLcdHLine             
+000119f8  halLcdVLine             
+00011a24  LFXT_Start              
+00011a4c  MenuSelection           
+00011a72  halADCInit              
+00011a98  __TI_zero_init          
+00011abc  halLcdPrintLine         
+00011ae0  P1_racket_hit           
+00011b02  P2_racket_hit           
+00011b24  halLcdSetContrast       
+00011b46  LCDInit                 
+00011b64  TimerB0Init             
+00011b7e  __mspabi_mpyi_f5hw      
+00011b96  bottom_wall_reached     
+00011bac  clear_player2_score     
+00011bc2  halAccPortInit          
+00011bd8  left_wall_reached       
+00011bee  right_wall_reached      
+00011c04  TimerA1Init             
+00011c18  memcpy                  
+00011c2c  __TI_decompress_none    
+00011c3e  top_wall_reached        
+00011c50  ReadAccX                
+00011c5e  ReadAccY                
+00011c6c  halLcdDrawBlock         
+00011c7a  __mspabi_slli           
+00011c84  C$$EXIT                 
+00011c84  abort                   
+00011c8a  _system_pre_init        
+00011c8e  _system_post_cinit      
 ffffffff  __TI_pprof_out_hndl     
 ffffffff  __TI_prof_data_size     
 ffffffff  __TI_prof_data_start    
@@ -2038,4 +2063,4 @@ UNDEFED   __TI_BINIT_Limit
 UNDEFED   __TI_INITARRAY_Base     
 UNDEFED   __TI_INITARRAY_Limit    
 
-[829 symbols]
+[834 symbols]

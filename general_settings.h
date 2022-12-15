@@ -25,27 +25,26 @@
 #define BALL_INTERVAL_mS 50 //timing interval for updating ball position
 
 //Tracking the menu and the settings for the game
-volatile unsigned int active_menu_id;
-volatile unsigned int game_mode_id;
-volatile unsigned int ctrl_id;
+volatile unsigned int active_menu_id;  //used for track the main menu and to highlight the menu-point
+volatile unsigned int game_mode_id;    //used to highlight the game mode sub-menu and save the selected value
+volatile unsigned int ctrl_id;         //used to highlight the control option mode sub-menu and save the selected value
 
-//flags marking when updates must be done
+//Flags marking when updates must be done
 volatile unsigned int InputUpdatePending;
 volatile unsigned int BallUpdatePending;
 volatile unsigned int LCDUpdatePending;
-volatile unsigned int InputChangePending; //flag to update racket
+volatile unsigned int InputChangePending; //flag for racket LCD update
 
-//accelerometer x,y,z and old x,y
-volatile int accx, accy;
-volatile int accx_offset, accy_offset;
-volatile int accx_old, accy_old, accdx, accdy;
+//Accelerometer x,y, and offset x,y
+volatile int accx, accy;                    //X and Y axis of the accelerometer
+volatile int accx_offset, accy_offset;      //offset values for calibration
+volatile int accdx, accdy;                //difference values for movement
 
 //Ball handling
 volatile unsigned int ballState; //Current ball state
 volatile int xBall, yBall; //Current ball position
 volatile int xBall_old, yBall_old; //For ball trail position
 volatile int xBall_old2, yBall_old2; //To delete old ball position
-
 
 //Racket1's variables
 volatile int xR1, yR1; //Current racket 1 position
@@ -54,5 +53,6 @@ volatile int xR1_old, yR1_old; //To delete old racket position
 //Racket2's variables
 volatile int xR2, yR2; //Current racket 2 position
 volatile int xR2_old, yR2_old; //To delete old racket position
-enum { EASY, HARD, MULTI }; //game mode settings handeling
+
+enum { EASY, HARD, MULTI }; //game mode settings handling
 #endif /* GENERAL_SETTINGS_H_ */

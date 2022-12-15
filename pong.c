@@ -213,7 +213,7 @@ void main(void)
 
                                       } //while loop
                }
-               break;
+
        case HARD:
                if(ctrl_id==1)  //SW and JSTICK are selected
                {
@@ -349,7 +349,7 @@ void main(void)
 
                                       } //while loop
                }
-               break;
+
        case MULTI:
                if(ctrl_id==1)  //SW and JSTICK are selected
                {
@@ -480,7 +480,7 @@ void main(void)
 
                    } //while loop
                }
-               break;
+
 
    }
 

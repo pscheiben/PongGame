@@ -87,7 +87,29 @@ void ball_update(void)
          yBall = (LCD_ROW + INF_BRD_WIDTH) >> 1;
          xBall = LCD_COL >> 1;
          //choose next state to start ball movement
-         ballState = 1;
+         accdx = accx-accx_offset;
+         accdy = accy-accy_offset;
+
+         if(accdy>0)
+         {
+             if(accdx>2)ballState = 11;
+             else
+             {
+                 if(accdx<-2)ballState = 5;
+                              else ballState = 8;
+             }
+
+         }
+         else
+         {
+             if(accdx>2)ballState = 12;
+             else
+             {
+                 if(accdx<-2)ballState = 4;
+                              else ballState = 1;
+             }
+
+         }
          break;
 
  case 1: //move up
@@ -116,7 +138,7 @@ void ball_update(void)
 
  case 2: //move up and a bit right
              xBall = xBall + 1;
-             yBall = yBall - 3;
+             yBall = yBall - 2;
              //Check right wall bounce
              if(right_wall_reached())
                  ballState = 14; //right wall hit, bounce to 14
@@ -172,7 +194,7 @@ void ball_update(void)
              break;
 
  case 4: //move right and a bit up
-             xBall = xBall + 3;
+             xBall = xBall + 2;
              yBall = yBall - 1;
              //Check right wall bounce
              if(right_wall_reached())
@@ -200,7 +222,7 @@ void ball_update(void)
              break;
 
  case 5: //move right and a bit down
-             xBall = xBall + 3;
+             xBall = xBall + 2;
              yBall = yBall + 1;
              //Check right wall bounce
              if(right_wall_reached())
@@ -259,7 +281,7 @@ void ball_update(void)
 
  case  7: //move a bit right and down
              xBall = xBall + 1;
-             yBall = yBall + 3;
+             yBall = yBall + 2;
              //Check right wall bounce
              if(right_wall_reached())
                  ballState = 9; //up wall hit, bounce to 9
@@ -310,7 +332,7 @@ void ball_update(void)
 
  case  9: //move a bit left and Down
              xBall = xBall - 1;
-             yBall = yBall + 3;
+             yBall = yBall + 2;
              //Check left wall bounce
              if(left_wall_reached())
                  ballState = 7; //left wall hit, bounce to 7
@@ -338,7 +360,7 @@ void ball_update(void)
 
 
  case 10: //move left and Down
-             xBall = xBall - 3;
+             xBall = xBall - 2;
              yBall = yBall + 2;
              //Check left wall bounce
              if(left_wall_reached())
@@ -366,7 +388,7 @@ void ball_update(void)
              break;
 
  case 11: //move left and a bit down
-             xBall = xBall - 3;
+             xBall = xBall - 2;
              yBall = yBall + 1;
              //Check left wall bounce
              if(left_wall_reached())
@@ -395,7 +417,7 @@ void ball_update(void)
 
 
  case 12: //move left and a bit up
-             xBall = xBall - 3;
+             xBall = xBall - 2;
              yBall = yBall - 1;
              //Check left wall bounce
              if(left_wall_reached())
@@ -452,7 +474,7 @@ void ball_update(void)
 
  case 14: //move a bit left and up
              xBall = xBall - 1;
-             yBall = yBall - 3;
+             yBall = yBall - 2;
              //Check left wall bounce
              if(left_wall_reached())
                  ballState = 2; //left wall hit, bounce to 2
@@ -491,6 +513,7 @@ void ball_update(void)
 
 
                        //A very simplistic game end handling
+
                        halLcdClearScreen(); //CLEAR SCREEN
                        halLcdPrintLine("     Game Over", 2, OVERWRITE_TEXT);//PRINT MESSAGE
                        halLcdPrintLine("  Player Two Win", 4, OVERWRITE_TEXT);//PRINT MESSAGE
@@ -515,6 +538,7 @@ void ball_update(void)
          {
 
                        //A very simplistic game end handling
+
                        halLcdClearScreen(); //CLEAR SCREEN
                        halLcdPrintLine("    Game Over", 2, OVERWRITE_TEXT);//PRINT MESSAGE
                        halLcdPrintLine("  Player One Win", 4, OVERWRITE_TEXT);//PRINT MESSAGE

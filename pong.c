@@ -48,8 +48,7 @@ volatile unsigned int Ball_intervals = 0; //count number of base intervals elaps
 //main function
 void main(void)
 {
-    accx_offset = 0;
-    accy_offset = 0;
+
   WDTCTL = WDTPW+WDTHOLD; // Stop WDT
   
   // Initialize board
@@ -295,7 +294,7 @@ void main(void)
                                         {
                                             InputUpdatePending=0;
                                             ReadAccX();
-                                            if(accdx>32) //SW1 pressed
+                                            if(accdx>8) //SW1 pressed
                                                 {
                                                     if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                                         {
@@ -304,7 +303,7 @@ void main(void)
                                                         }
                                                 }
 
-                                            if(accdx<-32) //SW2 pressed
+                                            if(accdx<-8) //SW2 pressed
                                                 {
                                                     if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                                         {
@@ -313,23 +312,28 @@ void main(void)
                                                         }
                                                 }
 
-                                            if(!(P2IN & BIT1)) //JS left pressed
-                                                {
-                                                   if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
-                                                       {
-                                                           xR2=xR2-2; //move racket 2 pixel left
-                                                           InputChangePending = 1;
-                                                       }
-                                                }
 
-                                            if(!(P2IN & BIT2)) //JS right pressed
-                                                {
-                                                   if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
-                                                       {
-                                                           xR2=xR2+2; //move racket 2 pixel right
-                                                           InputChangePending = 1;
-                                                       }
-                                                }
+                                            if(xBall<(xR2 + HALF_RACKET_SIZE))
+                                                     {
+                                                         if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
+                                                                 {
+                                                                     xR2=xR2-2; //move racket 1 pixel left
+                                                                     InputChangePending = 1;
+                                                                 }
+                                                     }
+                                                     else
+                                                     {
+                                                         if(xBall>(xR2 + HALF_RACKET_SIZE))
+                                                         {
+                                                             if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting left wall
+                                                                             {
+                                                                                 xR2=xR2+2; //move racket 1 pixel left
+                                                                                 InputChangePending = 1;
+                                                                             }
+                                                         }
+                                                     }
+
+
 
                                         }
                                         if(BallUpdatePending)
@@ -444,7 +448,7 @@ void main(void)
                                      }
                              }
 
-                         if(accdx>32) //JS left pressed
+                         if(accdy>32) //JS left pressed
                              {
                                 if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                     {
@@ -498,6 +502,9 @@ void LCDInit(void)
 //Most variables are  declared into general_settings.h
 void GameStartInit()
 {
+    accx_offset = accx;//for semi-random ballstate
+    accy_offset = accy;
+
 
  // ball init to avoid the left top corner visual artifact
  xBall = LCD_COL >> 1;

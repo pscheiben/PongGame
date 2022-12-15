@@ -99,7 +99,7 @@ void main(void)
                                                 {
                                                     if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                                         {
-                                                            xR1=xR1-3;
+                                                            xR1=xR1-4;
                                                             InputChangePending = 1;
                                                         }
                                                 }
@@ -108,7 +108,7 @@ void main(void)
                                                 {
                                                     if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                                         {
-                                                            xR1=xR1+3;
+                                                            xR1=xR1+4;
                                                             InputChangePending = 1;
                                                         }
                                                 }
@@ -161,20 +161,20 @@ void main(void)
                                         {
                                             InputUpdatePending=0;
                                             ReadAccX();
-                                            if(accdx>32) //Accelerometer sensitive enough
+                                            if(accdx>16) //Accelerometer sensitive enough
                                                 {
                                                     if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                                         {
-                                                            xR1=xR1-3;
+                                                            xR1=xR1-4;
                                                             InputChangePending = 1;
                                                         }
                                                 }
 
-                                            if(accdx<-32) //SW2 pressed
+                                            if(accdx<-16) //SW2 pressed
                                                 {
                                                     if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                                         {
-                                                            xR1=xR1+3;
+                                                            xR1=xR1+4;
                                                             InputChangePending = 1;
                                                         }
                                                 }
@@ -294,7 +294,7 @@ void main(void)
                                         {
                                             InputUpdatePending=0;
                                             ReadAccX();
-                                            if(accdx>8) //SW1 pressed
+                                            if(accdx>16) //SW1 pressed
                                                 {
                                                     if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                                         {
@@ -303,7 +303,7 @@ void main(void)
                                                         }
                                                 }
 
-                                            if(accdx<-8) //SW2 pressed
+                                            if(accdx<-16) //SW2 pressed
                                                 {
                                                     if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                                         {
@@ -430,7 +430,7 @@ void main(void)
                          ReadAccX();
                          ReadAccY();
 
-                         if(accdx>32) //SW1 pressed
+                         if(accdx>16) //SW1 pressed
                              {
                                  if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                      {
@@ -439,7 +439,7 @@ void main(void)
                                      }
                              }
 
-                         if(accdx<-32) //SW2 pressed
+                         if(accdx<-16) //SW2 pressed
                              {
                                  if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                      {
@@ -448,7 +448,7 @@ void main(void)
                                      }
                              }
 
-                         if(accdy>32) //JS left pressed
+                         if(accdy>16) //JS left pressed
                              {
                                 if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                     {
@@ -457,7 +457,7 @@ void main(void)
                                     }
                              }
 
-                         if(accdy<-32) //JS right pressed
+                         if(accdy<-16) //JS right pressed
                              {
                                 if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                     {

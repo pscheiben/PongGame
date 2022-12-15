@@ -161,7 +161,8 @@ void main(void)
                                         if(InputUpdatePending)
                                         {
                                             InputUpdatePending=0;
-                                            if(!(P2IN & BIT6)) //SW1 pressed
+                                            ReadAccX();
+                                            if(accdx>32) //Accelerometer sensitive enough
                                                 {
                                                     if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                                         {
@@ -170,7 +171,7 @@ void main(void)
                                                         }
                                                 }
 
-                                            if(!(P2IN & BIT7)) //SW2 pressed
+                                            if(accdx<-32) //SW2 pressed
                                                 {
                                                     if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                                         {
@@ -293,7 +294,8 @@ void main(void)
                                         if(InputUpdatePending)
                                         {
                                             InputUpdatePending=0;
-                                            if(!(P2IN & BIT6)) //SW1 pressed
+                                            ReadAccX();
+                                            if(accdx>32) //SW1 pressed
                                                 {
                                                     if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                                         {
@@ -302,7 +304,7 @@ void main(void)
                                                         }
                                                 }
 
-                                            if(!(P2IN & BIT7)) //SW2 pressed
+                                            if(accdx<-32) //SW2 pressed
                                                 {
                                                     if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                                         {
@@ -421,7 +423,10 @@ void main(void)
                      if(InputUpdatePending)
                      {
                          InputUpdatePending=0;
-                         if(!(P2IN & BIT6)) //SW1 pressed
+                         ReadAccX();
+                         ReadAccY();
+
+                         if(accdx>32) //SW1 pressed
                              {
                                  if (xR1 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                      {
@@ -430,7 +435,7 @@ void main(void)
                                      }
                              }
 
-                         if(!(P2IN & BIT7)) //SW2 pressed
+                         if(accdx<-32) //SW2 pressed
                              {
                                  if (xR1 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                      {
@@ -439,7 +444,7 @@ void main(void)
                                      }
                              }
 
-                         if(!(P2IN & BIT1)) //JS left pressed
+                         if(accdx>32) //JS left pressed
                              {
                                 if (xR2 > INF_SLIDE_WIDTH + 1) //avoid overwriting left wall
                                     {
@@ -448,7 +453,7 @@ void main(void)
                                     }
                              }
 
-                         if(!(P2IN & BIT2)) //JS right pressed
+                         if(accdy<-32) //JS right pressed
                              {
                                 if (xR2 < LCD_COL-2-HALF_RACKET_SIZE*2-INF_SLIDE_WIDTH) //avoid overwriting right wall
                                     {
@@ -711,14 +716,12 @@ void ClearBall(int x, int y)
 
 void ReadAccX(void)
 {
-    accx = ADC12MEM0;    //accx digitalisation
     accdx = accx-accx_offset;
 
 }
 
 void ReadAccY(void)
 {
-     accy = ADC12MEM1;    //accy digitalisation
      accdy = accy-accy_offset;
 }
 
@@ -833,7 +836,7 @@ void halBoardInit(void)
   PDOUT  = 0; PDDIR  = 0xFFFF; PDSEL  = 0;
   // P10.0 to USB RST pin, if enabled with J5
   PEOUT  = 0; PEDIR  = 0xFEFF; PESEL  = 0;
-  PFOUT  = 0; PEDIR  = 0xFEFF; PESEL  = 0;
+  PFOUT  = 0; PFDIR  = 0xFEFF; PFSEL  = 0;
   P11OUT = 0; P11DIR = 0xFF;   P11SEL = 0;
   PJOUT  = 0; PJDIR  = 0xFF;
 
@@ -865,13 +868,13 @@ void halBoardInit(void)
 void halAccPortInit(void)
 {
     //Configure ACC Power port 6.0
-    P6SEL |= BIT0; //GPIO function
+//    P6SEL |= BIT0; //GPIO function
     P6DIR |= BIT0; //Power pin output
     P6OUT |= BIT0; //ACC power - 6.0 out HIGH
 
     //Configure Accx, Accy, which are port 6.1, 6.2
     P6SEL |= (BIT1 + BIT2); //GPIO function
-    P6DIR &= ~(BIT1 + BIT2); //accx, accy, accz as input
+    P6DIR &= ~(BIT1 + BIT2); //accx, accy as input
 
 
 
@@ -881,21 +884,23 @@ void halAccPortInit(void)
 //Inits ADC12 to read battery voltage triggered from TB0.OUT3
 void halADCInit(void)
 {
-  // 5.4MHz (MODOSC_max) * 30 us (t_sensor)= 162 cycles min sampling time
+    ADC12CTL0 &= ~ADC12ENC;                // Ensure ENC is clear
+    // 5.4MHz (MODOSC_max) * 30 us (t_sensor)= 162 cycles min sampling time
   ADC12CTL0 = ADC12SHT0_7+ADC12ON+ADC12MSC;     // Set sample time to 192 cycles
   // Enable TB0.OUT1 as ADC trigger (ADC12SHS_3), enable sequence-of-channels
   ADC12CTL1 = ADC12SHS_3 + ADC12CONSEQ_1+ADC12SHP; // ... also enable sample timer
-
+  ADC12CTL2 = ADC12RES_2; //12 bit conversion
   //define conversion sequence (just Batt voltage so only ADC12MEM0 used)
-  ADC12MCTL0 = ADC12SREF_1 + ADC12INCH_1;// ADC input ch A1 = ACCx
-  ADC12MCTL1 = ADC12SREF_1 + ADC12INCH_2 + ADC12EOS;// ADC input ch A2 = ACCy + EndOfSequence
+  ADC12MCTL0 = ADC12INCH_1;// ADC input ch A1 = ACCx
+  ADC12MCTL1 = ADC12INCH_2 + ADC12EOS;// ADC input ch A2 = ACCy + EndOfSequence
+
 //  ADC12MCTL2 = ADC12SREF_1 + ADC12INCH_3 + ADC12EOS;// ADC input ch A3 = ACCz
 
   ADC12IE |= BIT1;                             //Enable ADC12MEM0IFG interrupt
 
   /* Initialize the shared reference module */
-  REFCTL0 |= REFMSTR + REFVSEL_1 + REFON;      // Configure internal 2.0V reference
-  ADC12CTL0 |= ADC12ENC;                // Enable conversions to configure REF
+//  REFCTL0 |= REFMSTR + REFVSEL_1 + REFON;      // Configure internal 2.0V reference
+//  ADC12CTL0 |= ADC12ENC;                // Enable conversions to configure REF
 }
 
 //NOTE: TimerA0 is initialized inside hal_lcd.c because it's already used for the LCD backlight PWM
@@ -972,7 +977,7 @@ __interrupt void TIMER0_B1_ISR(void)
     case 10: break;                // TB0CCR5 not used
     case 12: break;                // TB0CCR6 not used
     case 14:                       // TBIFG overflow, enable new ADC
-            REFCTL0 |= REFON;      // Enable internal reference
+//            REFCTL0 |= REFON;      // Enable internal reference
             ADC12CTL0 |= ADC12ENC; // Enable conversions to configure REF
             break;
   }
@@ -992,7 +997,7 @@ __interrupt void ADC12ISR (void)
   case  8:                         // Vector  8:  ADC12IFG1
           //Data is ready (both MEM0 and MEM1 converted)
           ADC12CTL0 &= ~ADC12ENC;  // Disable conversions to disable VREF
-          REFCTL0 &= ~REFON;       // Disable internal reference
+//          REFCTL0 &= ~REFON;       // Disable internal reference
           accx = ADC12MEM0;
           accy = ADC12MEM1;
           //accz = ADC12MEM2;    //accz digitalisation

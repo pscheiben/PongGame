@@ -80,9 +80,13 @@ int GameMenuInit(void)
                         }
                         halLcdClearScreen(); //CLEAR SCREEN
                         PrintMainMenu();
-                        if(ctrl_id = 2) halLcdPrintLine("ACC is calibrated", 7, OVERWRITE_TEXT);//PRINT MESSAGE
-                        accx_offset = accx;
-                        accy_offset = accy;
+                        if(ctrl_id == 2)
+                        {
+                            halLcdPrintLine("ACC is calibrated", 7, OVERWRITE_TEXT);//PRINT MESSAGE
+                            accx_offset = accx;
+                            accy_offset = accy;
+                        }
+
                     }
                     break;
             }

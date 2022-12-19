@@ -1,13 +1,14 @@
-/*********************************************************
- *
- * informationboard.c
- *
- * Create the score and information display
- *
- *  Created on: 27 Nov 2022
- *      Author: Sejbi
- *
- **********************************************************/
+//*******************************************************
+//
+//*
+// informationboard.c
+//*
+//* Create the score and information display
+//*
+//*  Created on: 27 Nov 2022
+//*      Author: Peter Scheibenhoffer
+//*
+//*******************************************************
 
 
 #include "ball_movement.h"
@@ -59,11 +60,8 @@ void clear_player1_score(int playerscore)
 //check the player 2 score and update
 void clear_player2_score(int playerscore)
 {
-
     clear_life(1, ((LCD_ROW>>1)-((MAX_PLAYER_LIFE-playerscore-1)*10))-11, 2); //clear the middle of the heart of life on a certain position
-
 }
-
 
 //generate the starting lives 5 or hardmode 3 for player one
 void generate_life_score(int p1_life, int p2_life)
@@ -72,13 +70,10 @@ void generate_life_score(int p1_life, int p2_life)
     p1_life_counter = p1_life; //Player 1 life counter set
     p2_life_counter = p2_life; //Player 2 life counter set
     if(game_mode_id==1) p1_life_counter=p1_life_counter-2; //reducing the Player 1 life by two in hard mode
-
-
     for(i=0;i<p1_life_counter;i++)
     {
         draw_life(1, ((LCD_ROW>>1)+((i)*10))+3, 1); //P1's life
     }
-
     for(i=0;i<p2_life_counter;i++)
     {
         draw_life(1, ((LCD_ROW>>1)-((i)*10))-11, 2); //P2's life

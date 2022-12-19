@@ -4,6 +4,10 @@
  *  Created on: Nov 2017
  *      Author: M Mata
  */
+// Modified by: Peter Scheibenhoffer
+// Date: 19th December 2022
+
+
 
 #ifndef GENERAL_SETTINGS_H_
 #define GENERAL_SETTINGS_H_
@@ -11,12 +15,9 @@
 #define LCD_BACKLIGHT_LEVEL 5 //0 to 16
 #define LCD_CONTRAST_LEVEL 90 //70 to 127
 
-
 #define HALF_RACKET_SIZE 6 //racket width in pixels
-
 #define BALL_RADIUS 1 //ball radius in pixels
 #define INF_SLIDE_WIDTH 10 //left and right information slide in pixels
-
 
 //Timing intervals for the game
 #define TIMING_BASE_mS 5 //base timing interval for all timed execution
